@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    context: {
+    content: {
       type: String,
       required: true,
     },
