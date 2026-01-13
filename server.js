@@ -2,12 +2,12 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
-const Post = require("./models/post");
+const postRoute = require("./routes/postRoutes")
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/posts", postRoute)
 
 const PORT = process.env.PORT || 3000;
 const user = process.env.MONGO_USER;
@@ -29,25 +29,7 @@ const connect = async () => {
 
 connect();
 
-app.get("/",(req, res) => {
-    res.json({ message: "IG clone API is running" });
-})
-app.post("/api/posts", async (req, res) => {
-  try {
-    const { user, content, image } = req.body;
 
-    const newPost = new Post({
-      user,
-      content,
-      image,
-    });
-
-    const savedPost = await newPost.save();
-    res.status(201).json(savedPost);
-  } catch (err) {
-    res.status(500).json({ message: err.message})
-  }
-});
 
 
 
