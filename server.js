@@ -2,12 +2,16 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const postRoute = require("./routes/postRoutes")
+const postRoute = require("./routes/postRoutes");
+const authRoute = require("./routes/authRoutes");
+// const userRoute = require("./routes/userRoutes")
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/posts", postRoute)
+app.use("/posts", postRoute);
+app.use("/", authRoute);
+// app.use("/", userRoute);
 
 const PORT = process.env.PORT || 3000;
 const user = process.env.MONGO_USER;
@@ -28,10 +32,6 @@ const connect = async () => {
 };
 
 connect();
-
-
-
-
 
 app.listen(PORT, () => {
   console.log("Server is running on port", PORT);
