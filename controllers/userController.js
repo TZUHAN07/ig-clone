@@ -16,7 +16,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   const { avatar } = req.body;
 
   try {
@@ -29,7 +29,7 @@ const updateUser = async (req, res) => {
 
     const updateUser = await User.findByIdAndUpdate(
       id,
-      { $set: avatar },
+      { avatar },
       { new: true },
       { runValidators: true }
     ).select("-password");
