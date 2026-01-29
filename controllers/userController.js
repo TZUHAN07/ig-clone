@@ -16,8 +16,9 @@ const getAllUsers = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const id = req.params.id;
-  const { password, email, ...allowedUpdate } = req.body;
+  const {id} = req.params;
+  const { avatar } = req.body;
+
   try {
     if (req.user._id.toString() !== id) {
       return res.status(403).json({
@@ -28,7 +29,7 @@ const updateUser = async (req, res) => {
 
     const updateUser = await User.findByIdAndUpdate(
       id,
-      { $set: allowedUpdate },
+      { $set: avatar },
       { new: true },
       { runValidators: true }
     ).select("-password");
@@ -54,7 +55,8 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
+
   try {
     if (req.user._id.toString() !== id) {
       return res.status(403).json({
@@ -85,7 +87,7 @@ const deleteUser = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
   try {
     const user = await User.findById(id).select("-password");
 
