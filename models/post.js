@@ -9,14 +9,17 @@ const postSchema = new mongoose.Schema(
     },
     content: {
       type: String,
-      required: true,
+      required: [true, "文字內容是必填的"]
     },
     image: {
       type: String,
+      required: [true, "圖片是必填的"]
     },
   },
-  { timestamps: true }
+  {
+    versionKey: false,
+  },
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Post", postSchema);
-

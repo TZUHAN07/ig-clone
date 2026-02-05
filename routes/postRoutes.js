@@ -5,18 +5,15 @@ const {
   createPosts,
   getPosts,
   updatePosts,
-  deletePosts
+  deletePosts,
 } = require("../controllers/postController");
+const authMiddleware = require("../middleware/authMiddleware");
 
-router.get("/", getAllPosts);
+router.get("/", authMiddleware, getAllPosts);
+router.get("/:id", authMiddleware, getPosts);
 
-router.post("/", createPosts);
-
-router.get("/:id", getPosts);
-
-router.put("/:id", updatePosts);
-
-router.delete("/:id", deletePosts);
-
+router.post("/", authMiddleware, createPosts);
+router.put("/:id", authMiddleware, updatePosts);
+router.delete("/:id", authMiddleware, deletePosts);
 
 module.exports = router;
