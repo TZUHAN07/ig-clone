@@ -6,12 +6,11 @@ const authMiddleware = async (req, res, next) => {
   try {
     if (
       req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
+      req.headers.authorization.startsWith("Bearer ")
     ) {
       token = req.headers.authorization.split(" ")[1];
-    } else if (req.cookies.jwt) {
-      token = req.cookies.jwt;
     }
+
 
     if (!token) {
       return res.status(401).json({
@@ -33,7 +32,6 @@ const authMiddleware = async (req, res, next) => {
 
     next();
   } catch (err) {
-
     if (err.name === "TokenExpiredError") {
       return res.status(401).json({
         success: false,
@@ -50,7 +48,7 @@ const authMiddleware = async (req, res, next) => {
 
     return res.status(401).json({
       success: false,
-      message: "伺服器錯誤",
+      message: "認證失敗",
     });
   }
 };

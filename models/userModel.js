@@ -24,6 +24,9 @@ const userSchema = new mongoose.Schema(
         "https://ui-avatars.com/api/?name=User&background=random&color=ffffff&size=200",
     },
   },
+  {
+    versionKey: false,
+  },
   { timestamps: true }
 );
 

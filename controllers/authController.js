@@ -3,8 +3,6 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// const generateToken = (user) => {}
-
 const register = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -15,16 +13,12 @@ const register = async (req, res) => {
 
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "此電子郵件已被使用" });
+      return res.status(400).json({ message: "此電子郵件已被使用" });
     }
 
     const existingUsername = await User.findOne({ username: username });
     if (existingUsername) {
-      return res
-        .status(400)
-        .json({ message: "此用戶名已被使用" });
+      return res.status(400).json({ message: "此用戶名已被使用" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -48,41 +42,59 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    if ( !email || !password) {
-      return res.status(400).json({ message: "請提供所有必填欄位" });
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "請提供所有必填欄位",
+      });
     }
     const user = await User.findOne({ email: email });
     console.log(user);
 
     if (!user) {
-      return res.status(400).json({ message: "找不到使用者" });
+      return res.status(400).json({
+        success: false,
+        message: "找不到此使用者",
+      });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "密碼錯誤" });
+      return res.status(400).json({
+        success: false,
+        message: "密碼錯誤",
+      });
     }
 
-    const payload ={
+    const payload = {
       user_id: user._id,
       user_email: user.email,
-      user_name: user.username
-    }
+      user_name: user.username,
+    };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || "7d" });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE || "7d",
+    });
     console.log(token);
 
-    res
-      .cookie("jwt", token, {
-        httpOnly: true,
-      })
-      .status(200)
-      .json({ message: `${user.username} is logged in`, jwtToken: token });
+    res.status(200).json({
+      success: true,
+      message: `${user.username} 登入成功`,
+      token: token,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
 module.exports = {
   register,
-  login
+  login,
 };
