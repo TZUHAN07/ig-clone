@@ -1,36 +1,34 @@
 const Post = require("../models/postModel");
+const { uploadToS3 } = require("../config/s3");
 
 const createPosts = async (req, res) => {
-  const { content, image } = req.body;
+  const { content } = req.body;
+  console.log("Content:", content);
   const userId = req.user._id;
   console.log(userId);
 
   try {
-    if (!content || !image) {
-      return res.status(400).json({
-        success: false,
-        message: "圖片和文字都是必填欄位",
-      });
-    }
-
-    if (content.trim() === "") {
+    if (!content || content.trim() === "") {
       return res.status(400).json({
         success: false,
         message: "文字內容不能為空",
       });
     }
 
-    if (image.trim() === "") {
+    if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: "圖片不能為空",
+        message: "請上傳圖片檔案",
       });
     }
+
+    const uploadedImage = await uploadToS3(req.file, "posts");
+    console.log("s3 URL", uploadedImage);
 
     const newPost = new Post({
       user: userId,
       content,
-      image,
+      image: uploadedImage,
     });
 
     const savedPost = await newPost.save();
