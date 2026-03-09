@@ -1,11 +1,11 @@
 const Post = require("../models/postModel");
 const { uploadToS3 } = require("../config/s3");
+const { resizeImage} = require("../config/imageService");
+
 
 const createPosts = async (req, res) => {
   const { content } = req.body;
-  console.log("Content:", content);
   const userId = req.user._id;
-  console.log(userId);
 
   try {
     if (!content || content.trim() === "") {
@@ -22,8 +22,9 @@ const createPosts = async (req, res) => {
       });
     }
 
+    const resizedBuffer = await resizeImage(req.file.buffer);
+    req.file.buffer = resizedBuffer;
     const uploadedImage = await uploadToS3(req.file, "posts");
-    console.log("s3 URL", uploadedImage);
 
     const newPost = new Post({
       user: userId,
