@@ -1,4 +1,6 @@
 const User = require("../models/userModel");
+const { uploadToS3 } = require("../config/s3");
+const { resizeImage } = require("../config/imageService");
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password").sort({ createdAt: -1 });
@@ -17,7 +19,14 @@ const getAllUsers = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { avatar } = req.body;
+  const updateData = {};
+
+  if (req.file) {
+    const resizedBuffer = await resizeImage(req.file.buffer);
+    req.file.buffer = resizedBuffer;
+    const avatarUrl = await uploadToS3(req.file, "avatars");
+    updateData.avatar = avatarUrl;
+  }
 
   try {
     if (req.user._id.toString() !== id) {
@@ -27,12 +36,10 @@ const updateUser = async (req, res) => {
       });
     }
 
-    const updateUser = await User.findByIdAndUpdate(
-      id,
-      { avatar },
-      { new: true },
-      { runValidators: true }
-    ).select("-password");
+    const updateUser = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
 
     if (!updateUser) {
       return res.status(404).json({
