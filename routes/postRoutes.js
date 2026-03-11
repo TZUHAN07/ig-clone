@@ -16,7 +16,7 @@ router.get("/", authMiddleware, getAllPosts);
 router.get("/:id", authMiddleware, getPosts);
 
 router.post("/", authMiddleware, upload.single("image"), createPosts);
-router.put("/:id", authMiddleware, updatePosts);
+router.put("/:id", authMiddleware, upload.single("image"), updatePosts);
 router.delete("/:id", authMiddleware, deletePosts);
 
 module.exports = router;

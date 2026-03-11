@@ -1,7 +1,7 @@
 const Post = require("../models/postModel");
 const { uploadToS3 } = require("../config/s3");
-const { resizeImage} = require("../config/imageService");
-
+const { resizeImage } = require("../config/imageService");
+const { File } = require("buffer");
 
 const createPosts = async (req, res) => {
   const { content } = req.body;
@@ -83,7 +83,10 @@ const getPosts = async (req, res) => {
 const updatePosts = async (req, res) => {
   const { id } = req.params;
   const userId = req.user._id;
-  const { content, image } = req.body;
+
+  const { content } = req.body || {}; 
+  console.log("content", content);
+  const updateData = {};
 
   try {
     const post = await Post.findById(id);
@@ -101,35 +104,39 @@ const updatePosts = async (req, res) => {
       });
     }
 
-    if (!content || !image) {
+    if (content!== undefined) {
+      if (content.trim() === "") {
+        return res.status(400).json({
+          success: false,
+          message: "文字內容不能為空",
+        });
+      }
+
+      updateData.content = content;
+    }
+
+    if (req.file) {
+      const resizedBuffer = await resizeImage(req.file.buffer);
+      req.file.buffer = resizedBuffer;
+      const updatePostImage = await uploadToS3(req.file, "posts");
+      updateData.image = updatePostImage;
+    }
+
+    if (Object.keys(updateData).length === 0) {
       return res.status(400).json({
         success: false,
-        message: "圖片和文字都是必填欄位",
+        message: "請提供要更新的內容",
       });
     }
 
-    if (content.trim() === "") {
-      return res.status(400).json({
-        success: false,
-        message: "文字內容不能為空",
-      });
-    }
-
-    if (image.trim() === "") {
-      return res.status(400).json({
-        success: false,
-        message: "圖片不能為空",
-      });
-    }
-
-    const updatePost = await Post.findByIdAndUpdate(
-      id,
-      { content, image },
-      { new: true },
-    ).populate({
+    const updatePost = await Post.findByIdAndUpdate(id, updateData, {
+      new: true,
+    }).populate({
       path: "user",
       select: "username avatar",
     });
+    console.log(updatePost)
+
     res.status(200).json({
       success: true,
       message: "貼文已更新",
