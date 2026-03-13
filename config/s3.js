@@ -1,4 +1,8 @@
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 require("dotenv").config();
 
 //初始化 S3 Client
@@ -24,4 +28,24 @@ const uploadToS3 = async (file, folderName) => {
 
   return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
 };
-module.exports = { uploadToS3 };
+
+const deleteImageFromS3 = async (fileUrl) => {
+  if (!fileUrl) return;
+
+  const url = new URL(fileUrl);
+  const key =url.pathname.substring(1);
+
+  try {
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: key,
+    };
+
+    const command = new DeleteObjectCommand(params);
+
+    await s3.send(command);
+  } catch (err) {
+    console.log(err);
+  }
+};
+module.exports = { uploadToS3, deleteImageFromS3 };

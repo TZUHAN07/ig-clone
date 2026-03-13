@@ -1,5 +1,5 @@
 const Post = require("../models/postModel");
-const { uploadToS3 } = require("../config/s3");
+const { uploadToS3, deleteImageFromS3 } = require("../config/s3");
 const { resizeImage } = require("../config/imageService");
 const { File } = require("buffer");
 
@@ -168,6 +168,10 @@ const deletePosts = async (req, res) => {
         success: false,
         message: "您無權刪除此貼文",
       });
+    }
+
+    if (post.image) {
+      await deleteImageFromS3(post.image);
     }
 
     await Post.findByIdAndDelete(id);
