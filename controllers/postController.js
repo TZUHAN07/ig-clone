@@ -84,7 +84,7 @@ const updatePosts = async (req, res) => {
   const { id } = req.params;
   const userId = req.user._id;
 
-  const { content } = req.body || {}; 
+  const { content } = req.body || {};
   console.log("content", content);
   const updateData = {};
 
@@ -104,7 +104,7 @@ const updatePosts = async (req, res) => {
       });
     }
 
-    if (content!== undefined) {
+    if (content !== undefined) {
       if (content.trim() === "") {
         return res.status(400).json({
           success: false,
@@ -115,11 +115,20 @@ const updatePosts = async (req, res) => {
       updateData.content = content;
     }
 
+    let oldImageUrl; 
+
     if (req.file) {
+      oldImageUrl = post.image;
+
       const resizedBuffer = await resizeImage(req.file.buffer);
       req.file.buffer = resizedBuffer;
       const updatePostImage = await uploadToS3(req.file, "posts");
       updateData.image = updatePostImage;
+    }
+
+    if (oldImageUrl){
+      deleteImageFromS3(oldImageUrl);
+      console.log("已刪除就圖片")
     }
 
     if (Object.keys(updateData).length === 0) {
@@ -135,7 +144,7 @@ const updatePosts = async (req, res) => {
       path: "user",
       select: "username avatar",
     });
-    console.log(updatePost)
+    console.log(updatePost);
 
     res.status(200).json({
       success: true,
