@@ -21,19 +21,41 @@ const updateUser = async (req, res) => {
   const { id } = req.params;
   const updateData = {};
 
-  if (req.file) {
-    const resizedBuffer = await resizeImage(req.file.buffer);
-    req.file.buffer = resizedBuffer;
-    const avatarUrl = await uploadToS3(req.file, "avatars");
-    updateData.avatar = avatarUrl;
-  }
-
   try {
     if (req.user._id.toString() !== id) {
       return res.status(403).json({
         success: false,
         message: "無權限更新此使用者",
       });
+    }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "未找到使用者",
+      });
+    }
+
+    if (req.file) {
+      const oldImageUrl = user.avatar;
+
+      const resizedBuffer = await resizeImage(req.file.buffer);
+      req.file.buffer = resizedBuffer;
+      const avatarUrl = await uploadToS3(req.file, "avatars");
+      updateData.avatar = avatarUrl;
+
+      if (oldImageUrl) {
+        deleteImageFromS3(oldImageUrl);
+        console.log("已刪除就圖片");
+      }
+    }
+
+    if (Object.keys(req.body).length > 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "請提供更新內容" });
     }
 
     const updateUser = await User.findByIdAndUpdate(id, updateData, {
