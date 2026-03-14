@@ -15,6 +15,18 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: [true, "圖片是必填的"]
     },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   {
     versionKey: false,

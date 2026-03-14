@@ -23,6 +23,18 @@ const userSchema = new mongoose.Schema(
       default:
         "https://ui-avatars.com/api/?name=User&background=random&color=ffffff&size=200",
     },
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     versionKey: false,
