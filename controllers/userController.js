@@ -95,9 +95,14 @@ const deleteUser = async (req, res) => {
       });
     }
 
-    const deleteUser = await User.findByIdAndDelete(id);
+    const user = await User.findById(id); 
+    if (user && user.avatar) {
+      await deleteImageFromS3(user.avatar); 
+    }
 
-    if (!deleteUser) {
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
       return res.status(404).json({
         success: false,
         message: "未找到使用者",
