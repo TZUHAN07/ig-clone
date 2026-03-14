@@ -1,5 +1,5 @@
 const User = require("../models/userModel");
-const { uploadToS3 } = require("../config/s3");
+const { uploadToS3, deleteImageFromS3 } = require("../config/s3");
 const { resizeImage } = require("../config/imageService");
 const getAllUsers = async (req, res) => {
   try {
@@ -52,10 +52,11 @@ const updateUser = async (req, res) => {
       }
     }
 
-    if (Object.keys(req.body).length > 0) {
-      return res
-        .status(400)
-        .json({ success: false, message: "請提供更新內容" });
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "請提供要更新的內容",
+      });
     }
 
     const updateUser = await User.findByIdAndUpdate(id, updateData, {

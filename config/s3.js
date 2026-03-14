@@ -33,7 +33,7 @@ const deleteImageFromS3 = async (fileUrl) => {
   if (!fileUrl) return;
 
   const url = new URL(fileUrl);
-  const key =url.pathname.substring(1);
+  const key = url.pathname.substring(1);
 
   try {
     const params = {
