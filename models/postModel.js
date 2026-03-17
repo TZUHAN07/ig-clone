@@ -9,11 +9,11 @@ const postSchema = new mongoose.Schema(
     },
     content: {
       type: String,
-      required: [true, "文字內容是必填的"]
+      required: [true, "文字內容是必填的"],
     },
     image: {
       type: String,
-      required: [true, "圖片是必填的"]
+      required: [true, "圖片是必填的"],
     },
     likes: [
       {
@@ -30,8 +30,8 @@ const postSchema = new mongoose.Schema(
   },
   {
     versionKey: false,
+    timestamps: true,
   },
-  { timestamps: true },
 );
 
 module.exports = mongoose.model("Post", postSchema);
