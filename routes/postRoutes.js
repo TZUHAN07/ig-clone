@@ -16,13 +16,24 @@ const {
   unlikePost,
 } = require("../controllers/likeController");
 
+const {
+  createComments,
+  getComments,
+  deleteComment,
+} = require("../controllers/commentController");
+
 router.get("/", authMiddleware, getAllPosts);
 router.get("/:id", authMiddleware, getPosts);
 router.post("/", authMiddleware, upload.single("image"), createPosts);
 router.put("/:id", authMiddleware, upload.single("image"), updatePosts);
-router.delete("/:id", authMiddleware, deletePosts);
 
 router.post("/:id/like", authMiddleware, likePost);
 router.delete("/:id/like", authMiddleware, unlikePost);
+
+router.post("/:id/comments", authMiddleware, createComments);
+router.get("/:id/comments", getComments);
+router.delete("/:id/comments/:commentId", authMiddleware, deleteComment);
+
+router.delete("/:id", authMiddleware, deletePosts);
 
 module.exports = router;
