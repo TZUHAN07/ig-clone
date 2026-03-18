@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const {initSocket} = require("./config/socket");
 
 const postRoute = require("./routes/postRoutes");
 const authRoute = require("./routes/authRoutes");
@@ -15,6 +16,9 @@ app.use(express.json());
 app.use("/posts", postRoute);
 app.use("/", authRoute);
 app.use("/users", userRoute);
+
+const server = http.createServer(app);
+initSocket(server);
 
 const PORT = process.env.PORT || 3000;
 const user = process.env.MONGO_USER;
@@ -36,6 +40,6 @@ const connect = async () => {
 
 connect();
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("Server is running on port", PORT);
 });

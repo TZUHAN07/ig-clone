@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const {getIO} = require("../config/socket");
 
 const followUser = async (req, res) => {
   const targetId = req.params.id;
@@ -29,6 +30,12 @@ const followUser = async (req, res) => {
     }
     await User.findByIdAndUpdate(targetId, { $push: { followers: myId } });
     await User.findByIdAndUpdate(myId, { $push: { following: targetId } });
+
+    getIO.to(targetId).emit("notification", {
+      type: "follow",
+      message: "有人追蹤你",
+      fromUser: myId,
+    });
 
     res.status(200).json({
       success: true,

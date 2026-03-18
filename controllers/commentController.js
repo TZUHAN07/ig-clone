@@ -1,6 +1,6 @@
 const Post = require("../models/postModel");
 const Comment = require("../models/commentModel");
-const { connect } = require("node:http2");
+const getIO = require("../config/socket");
 
 const createComments = async (req, res) => {
   const postId = req.params.id;
@@ -37,6 +37,16 @@ const createComments = async (req, res) => {
     });
 
     const populated = await savedComment.populate("user", "username avatar");
+
+    if(post.user._id.toString() !== userId.toString()) {
+      getIO.to(post.user.toString()).emit("notification", {
+        type: "comment",
+        message: "有人留言你的貼文",
+        postId,
+        fromUser: userId,
+        content,
+      });
+    }
 
     res.status(200).json({
       success: true,
