@@ -1,5 +1,4 @@
 const multer = require("multer");
-require("dotenv").config();
 
 const storage = multer.memoryStorage();
 
