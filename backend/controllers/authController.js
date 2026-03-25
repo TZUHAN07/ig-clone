@@ -32,7 +32,11 @@ const register = async (req, res) => {
     console.log(newUser);
 
     const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+    res.status(201).json({
+      success: true,
+      message: `${savedUser.username}註冊成功`,
+      data: savedUser,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
