@@ -1,0 +1,302 @@
+/* ── 整體佈局 ── */
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--base-color);
+  color: var(--text-color);
+  display: flex;
+}
+
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 80px;
+  transition: width 0.3s ease;
+  z-index: 100;
+  background-color: white;
+  border-right: 1px solid var(--line-color);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+}
+
+.sidebar:hover {
+  width: 245px;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.sidebar button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  outline: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  text-decoration: none;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.logo {
+  padding: 12px;
+  margin: 2px 0px;
+  flex-shrink: 0;
+}
+
+.logo svg {
+  width: 32px;
+  height: 32px;
+  fill: var(--text-color);
+  display: block;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-menu > li {
+  display: flex;
+  align-items: center;
+  margin: 2px 0px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.nav-menu > li:hover {
+  background-color: var(--input-color);
+}
+
+.nav-menu > li > a,
+.nav-menu > li > button {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  width: 100%;
+}
+
+.nav-menu > li svg,
+.nav-menu > li img {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  fill: var(--text-color);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nav-menu span {
+  font-size: 18px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  overflow: hidden;
+  color: var(--text-color);
+}
+
+.sidebar:hover .nav-menu span {
+  opacity: 1;
+}
+
+.main-content {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.reel-story {
+  width: 100%;
+  max-width: 600px;
+  height: 124px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 8px 9px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.reel-story::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── 貼文列表 ── */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ── 貼文卡片 ── */
+.post-card {
+  border-radius: 4px;
+  background-color: var(--base-color);
+  
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  padding: 0px 10px 12px 14px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.post-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--line-color);
+}
+
+.post-user {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.post-time {
+  font-size: 14px;
+  color: var(--secondary-text-color);
+}
+
+.post-image {
+  width: 480px;
+  height: auto; 
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid var(--line-color);
+}
+
+.post-footer {
+  display: flex;
+  flex-direction: column;
+  padding: 0px 10px;
+}
+.post-actions {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  gap: 6px;
+  padding: 2px 0px;
+}
+
+.post-actions svg {
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text-color);
+  stroke-width: 2px;
+  transition: transform 0.1s ease;
+}
+
+.post-actions .post-like:first-child svg {
+  margin-left: -8px;
+}
+
+.post-actions svg:hover {
+  transform: scale(1.1);
+}
+
+
+.post-like,
+.post-comment {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 2px;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.post-content {
+  padding: 4px 0px 16px;
+  font-size: 14px;
+  color: var(--text-color);
+  text-align: left;
+  line-height: 1.5;
+}
+
+.post-content .post-user {
+  margin-right: 6px;
+  font-weight: 600;
+}
+
+.caption.truncated {
+  display: -webkit-box;       
+  -webkit-line-clamp: 1;       
+  -webkit-box-orient: vertical;
+  overflow: hidden;  
+  color: var(--text-color);         
+}
+
+.more-btn {
+  font-size: 13px;
+  color: var(--secondary-text-color);
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+/* ── 右欄（之後實作） ── */
+.aside-content {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+/* RWD */
+@media (max-width: 1160px) {
+  .aside-content {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+}

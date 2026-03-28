@@ -13,6 +13,7 @@ if (!token) {
     window.location.href = "login.html";
   }, 1500);
 }
+
 const loadPosts = async () => {
   postList.innerHTML = "<p style='text-align:center;'>貼文載入中...</p>";
   const posts = await getAllPosts();
