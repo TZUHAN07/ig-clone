@@ -1,4 +1,5 @@
 const postList = document.querySelector(".post-list");
+const profile = document.querySelector(".profile");
 const token = getToken();
 
 if (!token) {
@@ -26,4 +27,13 @@ const loadPosts = async () => {
   });
 };
 
+const loadProfile = async () => {
+  const user = await getMe();
+  if (!user || !user.data) return;
+
+  const avatar = createProfileAvatar(user.data);
+  profile.appendChild(avatar);
+};
+
 loadPosts();
+loadProfile();
