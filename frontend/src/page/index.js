@@ -9,6 +9,8 @@ const imageInput = document.getElementById("image-input");
 const postCaption = document.getElementById("post-caption");
 const uploadLabel = document.querySelector(".upload-label");
 const shareBtn = document.querySelector(".share-btn");
+
+const asideContent = document.querySelector(".aside-content");
 const token = getToken();
 
 if (!token) {
@@ -50,6 +52,35 @@ const loadProfile = async () => {
 
   const avatar = createProfileAvatar(user.data);
   profile.appendChild(avatar);
+};
+
+const loadSuggestions = async () => {
+  const [users, me] = await Promise.all([getAllUsers(), getMe()]);
+
+  const allUsers = users.data;
+  const meInfo = me.data;
+
+  const suggestions = allUsers
+    .filter((user) => {
+      if (user._id === meInfo._id) return false;
+      if (
+        meInfo.following.some(
+          (id) => id === user._id || id.toString() === user._id,
+        )
+      )
+        return false;
+
+      return true;
+    })
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 5);
+
+  // 把每個 suggestion 建立卡片插入 .aside-content
+
+  suggestions.forEach((user) => {
+    const card = createSuggestCard(user);
+    asideContent.appendChild(card);
+  });
 };
 
 createBtn.addEventListener("click", () => {
@@ -100,3 +131,4 @@ shareBtn.addEventListener("click", async () => {
 
 loadPosts();
 loadProfile();
+loadSuggestions();
