@@ -1,4 +1,5 @@
 const Post = require("../models/postModel");
+const User = require("../models/userModel");
 const { uploadToS3, deleteImageFromS3 } = require("../config/s3");
 const { resizeImage } = require("../config/imageService");
 const { File } = require("buffer");
@@ -115,7 +116,7 @@ const updatePosts = async (req, res) => {
       updateData.content = content;
     }
 
-    let oldImageUrl; 
+    let oldImageUrl;
 
     if (req.file) {
       oldImageUrl = post.image;
@@ -126,9 +127,9 @@ const updatePosts = async (req, res) => {
       updateData.image = updatePostImage;
     }
 
-    if (oldImageUrl){
+    if (oldImageUrl) {
       deleteImageFromS3(oldImageUrl);
-      console.log("已刪除就圖片")
+      console.log("已刪除就圖片");
     }
 
     if (Object.keys(updateData).length === 0) {
@@ -198,8 +199,14 @@ const deletePosts = async (req, res) => {
 };
 
 const getAllPosts = async (req, res) => {
+  const userId = req.user._id;
+
   try {
-    const allPosts = await Post.find()
+    const me = await User.findById(userId).select("following");
+
+    const posts = await Post.find({
+      user: { $nin: [...me.following, userId] },
+    })
       .populate({
         path: "user",
         select: "username avatar",
@@ -209,7 +216,54 @@ const getAllPosts = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "取得所有貼文成功",
-      data: allPosts,
+      data: posts,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+const getFollowingPosts = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const me = await User.findById(userId).select("following");
+
+    const posts = await Post.find({
+      user: {
+        $in: [...me.following],
+      },
+    })
+      .populate({
+        path: "user",
+        select: "username avatar",
+      })
+      .sort({ createdAt: -1 });
+
+    if (!posts) {
+      const posts = await Post.find({
+        user: { $ne: userId },
+      })
+        .populate({
+          path: "user",
+          select: "username avatar",
+        })
+        .sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        message: "取得追蹤貼文成功",
+        data: posts,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "取得追蹤貼文成功",
+      data: posts,
     });
   } catch (err) {
     res.status(500).json({
@@ -225,4 +279,5 @@ module.exports = {
   updatePosts,
   deletePosts,
   getAllPosts,
+  getFollowingPosts,
 };

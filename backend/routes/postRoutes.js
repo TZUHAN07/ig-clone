@@ -9,6 +9,7 @@ const {
   getPosts,
   updatePosts,
   deletePosts,
+  getFollowingPosts,
 } = require("../controllers/postController");
 
 const {
@@ -23,6 +24,7 @@ const {
 } = require("../controllers/commentController");
 
 router.get("/", authMiddleware, getAllPosts);
+router.get("/following", authMiddleware, getFollowingPosts);
 router.get("/:id", authMiddleware, getPosts);
 router.post("/", authMiddleware, upload.single("image"), createPosts);
 router.put("/:id", authMiddleware, upload.single("image"), updatePosts);
