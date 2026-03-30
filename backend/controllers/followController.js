@@ -31,7 +31,7 @@ const followUser = async (req, res) => {
     await User.findByIdAndUpdate(targetId, { $push: { followers: myId } });
     await User.findByIdAndUpdate(myId, { $push: { following: targetId } });
 
-    getIO.to(targetId).emit("notification", {
+    getIO().to(targetId).emit("notification", {
       type: "follow",
       message: "有人追蹤你",
       fromUser: myId,

@@ -25,7 +25,7 @@ router.put("/:id", authMiddleware, upload.single("avatar"), updateUser);
 router.delete("/:id", authMiddleware, deleteUser);
 
 router.post("/:id/follow", authMiddleware, followUser);
-router.delete("/:id/unfollow", authMiddleware, unfollowUser);
+router.delete("/:id/follow", authMiddleware, unfollowUser);
 router.get("/:id/followers", getFollowers);
 router.get("/:id/following", getFollowing);
 
