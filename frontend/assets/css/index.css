@@ -127,15 +127,21 @@ body {
   width: 100%;
   flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
   min-height: 100vh;
 }
 
+.container {
+  width: 100%;
+  max-width: 930px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 .reel-story {
   width: 100%;
-  max-width: 600px;
+  max-width: 930px;
   height: 124px;
   display: flex;
   align-items: center;
@@ -197,7 +203,7 @@ body {
 }
 
 .post-image {
-  width: 480px;
+  width: 100%;
   height: auto;
   aspect-ratio: 4 / 5;
   object-fit: cover;
@@ -279,6 +285,7 @@ body {
 
 /* ── 右欄（之後實作） ── */
 .aside-content {
+  position: fixed;
   width: 320px;
   flex-shrink: 0;
 }
@@ -302,16 +309,17 @@ body {
 .hidden {
   display: none !important;
 }
- 
+
 .modal-overlay {
-  position: fixed;       
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.65); 
-  z-index: 200;           
+  background-color: rgba(0, 0, 0, 0.65);
+  z-index: 200;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -320,23 +328,23 @@ body {
   background-color: white;
   border-radius: 12px;
   width: 90%;
-  max-width: 680px;
-  max-height: 500px ;
+  height: 90%;
+  max-width: 800px;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
-
-
 .new-post-header {
   display: flex;
   align-items: center;
-  justify-content: center;  
-  position: relative;       
+  justify-content: center;
+  position: relative;
   padding: 14px 16px;
   border-bottom: 1px solid var(--line-color);
-}   
+  flex-shrink: 0;
+}
 
 .header-text {
   font-size: 16px;
@@ -345,8 +353,8 @@ body {
 }
 
 .close-btn {
-  position: absolute;       
-  right: 16px;              
+  position: absolute;
+  right: 16px;
   background: none;
   border: none;
   font-size: 20px;
@@ -363,7 +371,9 @@ body {
 .post-body {
   display: flex;
   flex: 1;
-  min-height: 400px;
+  overflow: hidden; /* 加這個 */
+  min-height: 0;
+  flex: 1;
 }
 
 .post-image-area {
@@ -375,7 +385,6 @@ body {
   background-color: var(--base-color);
   border-right: 1px solid var(--line-color);
   position: relative;
-  min-height: 400px;
   cursor: pointer;
 }
 
@@ -391,7 +400,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
   cursor: pointer;
   color: var(--text-color);
 }
@@ -409,9 +417,9 @@ body {
 .upload-label:hover span {
   opacity: 1;
 }
- 
+
 .post-info {
-  width: 340px;
+  flex: 0.6;
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -432,10 +440,28 @@ body {
 #post-caption::placeholder {
   color: var(--secondary-text-color);
 }
- 
+
 .new-post-footer {
   display: flex;
-  justify-content: center; 
+  justify-content: flex-end;
   padding: 12px 16px;
-  border-top: 1px solid #dbdbdb;
+  border-top: 1px solid var(--line-color);
+  flex-shrink: 0;
+}
+
+.share-btn {
+  background-color: var(--accent-color);
+  opacity: 0.75;
+  color: var(--base-color);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.share-btn:hover {
+  opacity: 1;
 }
