@@ -1,7 +1,7 @@
 const sidebarContainer = document.querySelector(".sidebar-container");
 
 function loadSidebar() {
-    if (!sidebarContainer) return;
+  if (!sidebarContainer) return;
 
   const sidebar = document.createElement("nav");
   sidebar.className = "sidebar";
@@ -91,11 +91,11 @@ function loadSidebar() {
       </ul>
     `;
 
-    sidebarContainer.appendChild(sidebar);
+  sidebarContainer.appendChild(sidebar);
     
-    setTimeout(() => {
-  document.dispatchEvent(new Event("sidebarLoaded"));
-}, 0);
+  setTimeout(() => {
+    document.dispatchEvent(new Event("sidebarLoaded"));
+  }, 0);
 }
 
 const createProfileAvatar = (user) => {
