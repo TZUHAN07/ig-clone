@@ -1,4 +1,5 @@
 const sidebarContainer = document.querySelector(".sidebar-container");
+const modalContainer = document.querySelector(".modal-container");
 
 function loadSidebar() {
   if (!sidebarContainer) return;
@@ -93,11 +94,123 @@ function loadSidebar() {
 
   sidebarContainer.appendChild(sidebar);
 
+  loadModal();
+  // 使用 setTimeout 確保 DOM 已載入完成後再 dispatch event
   loadProfile().finally(() => {
     setTimeout(() => {
-      document.dispatchEvent(new Event("sidebarLoaded"));
+      document.dispatchEvent(
+        new CustomEvent("sidebarLoaded", {
+          detail: { resetModal, getFormData },
+        }),
+      );
     }, 0);
   });
+}
+
+function loadModal() {
+  const modal = document.createElement("div");
+  modal.id = "create-modal";
+  modal.className = "modal-overlay hidden";
+
+  modal.innerHTML = `
+     <div class="create-post">
+          <div class="new-post-header">
+            <span class="header-text">Create new post</span>
+            <button class="close-btn" id="close-modal">✕</button>
+          </div>
+
+          <div class="post-body">
+            <div class="post-image-area">
+              <img id="image-preview" src="" alt="" class="hidden" />
+              <label for="image-input" class="upload-label">
+                <span>Select from computer</span>
+              </label>
+              <input
+                type="file"
+                id="image-input"
+                accept="image/*"
+                class="hidden"
+              />
+            </div>
+
+            <div class="post-info">
+              <textarea
+                id="post-caption"
+                placeholder="say something..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="new-post-footer">
+            <button class="share-btn" id="share-btn">Share</button>
+          </div>
+        </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // modal 插入後才選取元素，這時 DOM 已存在
+  const createBtn = document.querySelector(".create-btn");
+  const closeBtn = document.getElementById("close-modal");
+  const imagePreview = document.getElementById("image-preview");
+  const imageInput = document.getElementById("image-input");
+  const uploadLabel = document.querySelector(".upload-label");
+
+  createBtn.addEventListener("click", () => {
+    modal.classList.remove("hidden");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    resetModal();
+  });
+
+  imageInput.addEventListener("change", () => {
+    if (!imageInput.files[0]) return;
+    imagePreview.src = URL.createObjectURL(imageInput.files[0]);
+    imagePreview.classList.remove("hidden");
+    uploadLabel.classList.add("hidden");
+  });
+
+  imagePreview.addEventListener("click", () => {
+    imageInput.click();
+  });
+}
+
+const resetModal = () => {
+  const imageInput = document.getElementById("image-input");
+  const imagePreview = document.getElementById("image-preview");
+  const uploadLabel = document.querySelector(".upload-label");
+  const postCaption = document.getElementById("post-caption");
+  
+  imageInput.value = "";
+  imagePreview.src = "";
+  imagePreview.classList.add("hidden");
+  uploadLabel.classList.remove("hidden");
+  postCaption.value = "";
+};
+
+function getFormData() {
+  const imageInput = document.getElementById("image-input");
+  const postCaption = document.getElementById("post-caption");
+
+  const file = imageInput.files[0];
+  const caption = postCaption.value;
+
+  if (!file) {
+    alert("choose photo");
+    return null;
+  }
+  if (!caption.trim()) {
+    alert("enter caption");
+    return null;
+  }
+
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("content", caption);
+
+  return formData;
 }
 
 const createProfileAvatar = (user) => {
