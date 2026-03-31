@@ -41,7 +41,6 @@ const loadPosts = async () => {
   });
 };
 
-
 const loadSuggestions = async () => {
   const [users, me] = await Promise.all([getAllUsers(), getMe()]);
 
@@ -72,20 +71,10 @@ const loadSuggestions = async () => {
 };
 
 document.addEventListener("sidebarLoaded", () => {
-  const profile = document.querySelector(".profile");
   const createBtn = document.querySelector(".create-btn");
   const closeBtn = document.getElementById("close-modal");
 
-  const loadProfile = async () => {
-  const user = await getMe();
-  if (!user || !user.data) return;
-
-  const avatar = createProfileAvatar(user.data);
-  profile.appendChild(avatar);
-};
-
   loadPosts();
-  loadProfile();
   loadSuggestions();
 
   createBtn.addEventListener("click", () => {
@@ -134,3 +123,6 @@ shareBtn.addEventListener("click", async () => {
     loadPosts();
   }
 });
+
+loadPosts();
+loadSuggestions();

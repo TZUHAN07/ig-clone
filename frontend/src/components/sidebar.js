@@ -92,10 +92,12 @@ function loadSidebar() {
     `;
 
   sidebarContainer.appendChild(sidebar);
-    
-  setTimeout(() => {
-    document.dispatchEvent(new Event("sidebarLoaded"));
-  }, 0);
+
+  loadProfile().finally(() => {
+    setTimeout(() => {
+      document.dispatchEvent(new Event("sidebarLoaded"));
+    }, 0);
+  });
 }
 
 const createProfileAvatar = (user) => {
@@ -109,6 +111,17 @@ const createProfileAvatar = (user) => {
     `;
 
   return profileAvatar;
+};
+
+const loadProfile = async () => {
+  const profile = document.querySelector(".profile");
+  if (!profile) return;
+
+  const user = await getMe();
+  if (!user || !user.data) return;
+
+  const avatar = createProfileAvatar(user.data);
+  profile.appendChild(avatar);
 };
 
 loadSidebar();

@@ -9,15 +9,5 @@ const loadExplorePosts = async () => {
 };
 
 document.addEventListener("sidebarLoaded", () => {
-  const profile = document.querySelector(".profile");
-
-  const loadProfile = async () => {
-    const user = await getMe();
-    if (!user || !user.data) return;
-
-    const avatar = createProfileAvatar(user.data);
-    profile.appendChild(avatar);
-  };
-  loadProfile();
   loadExplorePosts();
 });
