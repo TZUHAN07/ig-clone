@@ -114,6 +114,14 @@
   opacity: 1;
 }
 
+.post-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--line-color);
+}
+
 @media (max-width: 768px) {
   .sidebar {
     display: none;

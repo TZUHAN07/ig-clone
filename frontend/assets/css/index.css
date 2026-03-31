@@ -67,14 +67,6 @@ body {
   gap: 10px;
 }
 
-.post-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--line-color);
-}
-
 .post-user {
   font-size: 14px;
   font-weight: 600;
