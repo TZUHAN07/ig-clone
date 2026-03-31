@@ -243,8 +243,8 @@ const getFollowingPosts = async (req, res) => {
       })
       .sort({ createdAt: -1 });
 
-    if (!posts) {
-      const posts = await Post.find({
+    if (!posts || posts.length === 0) {
+      const otherPosts = await Post.find({
         user: { $ne: userId },
       })
         .populate({
@@ -256,7 +256,7 @@ const getFollowingPosts = async (req, res) => {
       res.status(200).json({
         success: true,
         message: "取得追蹤貼文成功",
-        data: posts,
+        data: otherPosts,
       });
     }
 
