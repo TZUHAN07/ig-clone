@@ -1,15 +1,10 @@
 const postList = document.querySelector(".post-list");
-const profile = document.querySelector(".profile");
-const createBtn = document.querySelector(".create-btn");
 const modal = document.getElementById("create-modal");
-const closeBtn = document.getElementById("close-modal");
-const imageArea = document.querySelector(".post-image-area");
 const imagePreview = document.getElementById("image-preview");
 const imageInput = document.getElementById("image-input");
 const postCaption = document.getElementById("post-caption");
 const uploadLabel = document.querySelector(".upload-label");
 const shareBtn = document.querySelector(".share-btn");
-
 const asideContent = document.querySelector(".aside-content");
 const token = getToken();
 
@@ -46,13 +41,6 @@ const loadPosts = async () => {
   });
 };
 
-const loadProfile = async () => {
-  const user = await getMe();
-  if (!user || !user.data) return;
-
-  const avatar = createProfileAvatar(user.data);
-  profile.appendChild(avatar);
-};
 
 const loadSuggestions = async () => {
   const [users, me] = await Promise.all([getAllUsers(), getMe()]);
@@ -83,13 +71,31 @@ const loadSuggestions = async () => {
   });
 };
 
-createBtn.addEventListener("click", () => {
-  modal.classList.remove("hidden");
-});
+document.addEventListener("sidebarLoaded", () => {
+  const profile = document.querySelector(".profile");
+  const createBtn = document.querySelector(".create-btn");
+  const closeBtn = document.getElementById("close-modal");
 
-closeBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
-  resetModal();
+  const loadProfile = async () => {
+  const user = await getMe();
+  if (!user || !user.data) return;
+
+  const avatar = createProfileAvatar(user.data);
+  profile.appendChild(avatar);
+};
+
+  loadPosts();
+  loadProfile();
+  loadSuggestions();
+
+  createBtn.addEventListener("click", () => {
+    modal.classList.remove("hidden");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    resetModal();
+  });
 });
 
 imageInput.addEventListener("change", () => {
@@ -128,7 +134,3 @@ shareBtn.addEventListener("click", async () => {
     loadPosts();
   }
 });
-
-loadPosts();
-loadProfile();
-loadSuggestions();
