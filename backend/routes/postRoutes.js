@@ -7,6 +7,7 @@ const {
   getAllPosts,
   createPosts,
   getPosts,
+  getUserPosts,
   updatePosts,
   deletePosts,
   getFollowingPosts,
@@ -25,6 +26,7 @@ const {
 
 router.get("/", authMiddleware, getAllPosts);
 router.get("/following", authMiddleware, getFollowingPosts);
+router.get("/user/:id", authMiddleware, getUserPosts);
 router.get("/:id", authMiddleware, getPosts);
 router.post("/", authMiddleware, upload.single("image"), createPosts);
 router.put("/:id", authMiddleware, upload.single("image"), updatePosts);
