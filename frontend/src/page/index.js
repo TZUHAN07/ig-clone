@@ -68,8 +68,6 @@ document.addEventListener("sidebarLoaded", (e) => {
   shareBtn.addEventListener("click", async () => {
     const formData = getFormData();
     if (!formData) return;
-    formData.append("image", file);
-    formData.append("content", caption);
 
     const data = await createPost(formData);
 
