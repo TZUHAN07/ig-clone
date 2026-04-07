@@ -273,6 +273,29 @@ const getFollowingPosts = async (req, res) => {
   }
 };
 
+const getUserPosts = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const posts = await Post.find({ user: id })
+      .populate({
+        path: "user",
+        select: "username avatar",
+      })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      message: "取得使用者貼文成功",
+      data: posts,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   createPosts,
   getPosts,
@@ -280,4 +303,5 @@ module.exports = {
   deletePosts,
   getAllPosts,
   getFollowingPosts,
+  getUserPosts,
 };
