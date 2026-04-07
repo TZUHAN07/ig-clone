@@ -2,12 +2,6 @@ const exploreList = document.querySelector(".explore-list");
 
 const token = getToken();
 if (!token) {
-  postList.innerHTML = `
-    <div style="text-align: center; margin-top: 50px; color: #f06272;">
-      <h3>請先登入</h3>
-      <p>正在為您跳轉到登入頁面...</p>
-    </div>
-  `;
   setTimeout(() => {
     window.location.href = "login.html";
   }, 1500);
@@ -26,14 +20,13 @@ const loadExplorePosts = async () => {
 document.addEventListener("sidebarLoaded", (e) => {
   const { resetModal, getFormData } = e.detail;
   const shareBtn = document.getElementById("share-btn");
+  const modal = document.getElementById("create-modal");
 
   loadExplorePosts();
 
   shareBtn.addEventListener("click", async () => {
     const formData = getFormData();
     if (!formData) return;
-    formData.append("image", file);
-    formData.append("content", caption);
 
     const data = await createPost(formData);
 

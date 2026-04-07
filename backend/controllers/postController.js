@@ -243,7 +243,7 @@ const getFollowingPosts = async (req, res) => {
       })
       .sort({ createdAt: -1 });
 
-    if (!posts || posts.length === 0) {
+    if ( posts.length === 0) {
       const otherPosts = await Post.find({
         user: { $ne: userId },
       })
@@ -253,7 +253,7 @@ const getFollowingPosts = async (req, res) => {
         })
         .sort({ createdAt: -1 });
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "取得追蹤貼文成功",
         data: otherPosts,

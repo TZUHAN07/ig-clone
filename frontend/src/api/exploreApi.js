@@ -1,5 +1,3 @@
-const { API_BASE_URL } = config;
-
 async function getExplorePosts() {
   const token = getToken();
   try {
