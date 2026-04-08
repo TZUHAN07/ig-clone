@@ -182,7 +182,7 @@ const resetModal = () => {
   const imagePreview = document.getElementById("image-preview");
   const uploadLabel = document.querySelector(".upload-label");
   const postCaption = document.getElementById("post-caption");
-  
+
   imageInput.value = "";
   imagePreview.src = "";
   imagePreview.classList.add("hidden");
@@ -214,16 +214,16 @@ function getFormData() {
 }
 
 const createProfileAvatar = (user) => {
-  const profileAvatar = document.createElement("a");
-  profileAvatar.href = "profile.html";
-  profileAvatar.className = "nav-action";
+  const navAvatar = document.createElement("a");
+  navAvatar.href = "profile.html";
+  navAvatar.className = "nav-action";
 
-  profileAvatar.innerHTML = `
-    <img class="profile-avatar" src="${user.avatar}" alt="${user.username}"/>
+  navAvatar.innerHTML = `
+    <img class="nav-avatar " src="${user.avatar}" alt="${user.username}"/>
     <span>Profile</span>
     `;
 
-  return profileAvatar;
+  return navAvatar;
 };
 
 const loadProfile = async () => {
