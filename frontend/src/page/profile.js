@@ -42,8 +42,20 @@ document.addEventListener("sidebarLoaded", async () => {
   if (!profileId || profileId === myId) {
     profileBtn.textContent = "Edit Profile";
   } else {
-    const isFollowing = user.followers.some((id) => id.equals(myId));
+    let isFollowing = user.followers.some((id) => id === myId || id.toString() === myId);
     profileBtn.textContent = isFollowing ? "Following" : "Follow";
+
+    profileBtn.addEventListener("click", async () => {
+      if (isFollowing) {
+        await unfollowUser(targetId);
+        profileBtn.textContent = "Follow";
+        isFollowing = false;
+      } else {
+        await followUser(targetId);
+        profileBtn.textContent = "Following";
+        isFollowing = true;
+      }
+    })
   }
 
   const profileList = document.querySelector(".profile-list");
