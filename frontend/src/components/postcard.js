@@ -1,3 +1,5 @@
+const basePath = window.location.pathname.replace(/[^/]*\.html$/, "");
+
 const createPostCard = (post) => {
   const card = document.createElement("div");
   card.className = "post-card";
@@ -35,7 +37,7 @@ const createPostCard = (post) => {
       <span class="more-btn">more</span>
     </div>
     </div>
-  `;;
+  `;
 
   const caption = card.querySelector(".caption");
   const moreBtn = card.querySelector(".more-btn");
@@ -45,10 +47,22 @@ const createPostCard = (post) => {
       moreBtn.style.display = "none";
     }
   });
-  
+
   moreBtn.addEventListener("click", () => {
     caption.classList.remove("truncated");
     moreBtn.style.display = "none";
+  });
+
+  const postAvatar = card.querySelector(".post-avatar");
+  postAvatar.addEventListener("click", () => {
+    window.location.href = `${basePath}profile.html?id=${post.user._id}`;
+  });
+
+  const postUser = card.querySelectorAll(".post-user");
+  postUser.forEach((user) => {
+    user.addEventListener("click", () => {
+      window.location.href = `${basePath}profile.html?id=${post.user._id}`;
+    });
   });
 
   return card;
