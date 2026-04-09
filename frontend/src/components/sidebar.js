@@ -111,6 +111,7 @@ function loadSidebar() {
   sidebarContainer.appendChild(sidebar);
 
   loadModal();
+  loadLogout();
   // 使用 setTimeout 確保 DOM 已載入完成後再 dispatch event
   loadProfile().finally(() => {
     setTimeout(() => {
@@ -119,7 +120,7 @@ function loadSidebar() {
           detail: { resetModal, getFormData },
         }),
       );
-    }, 0);
+    }, 0)
   });
 }
 
@@ -251,6 +252,14 @@ const loadProfile = async () => {
 
   const avatar = createProfileAvatar(user.data);
   profile.appendChild(avatar);
+};
+
+const loadLogout = () => {
+  const logout = document.querySelector(".logout-btn");
+  logout.addEventListener("click", () => {
+    removeToken(); 
+    window.location.href = "login.html";
+  });
 };
 
 loadSidebar();
