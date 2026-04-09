@@ -1,3 +1,5 @@
+const basePath = window.location.pathname.replace(/[^/]*\.html$/, "");
+
 const formatTime = (createdAt) => {
   const time = new Date();
   const past = new Date(createdAt);

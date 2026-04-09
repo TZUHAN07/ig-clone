@@ -1,5 +1,3 @@
-const basePath = window.location.pathname.replace(/[^/]*\.html$/, "");
-
 const createPostCard = (post) => {
   const card = document.createElement("div");
   card.className = "post-card";
