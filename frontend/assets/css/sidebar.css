@@ -110,7 +110,8 @@
   color: var(--text-color);
 }
 
-.sidebar:hover .nav-menu span {
+.sidebar:hover .nav-menu span,
+.sidebar:hover .sidebar-bottom span {
   opacity: 1;
 }
 
@@ -120,6 +121,41 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--line-color);
+}
+
+.sidebar-bottom {
+  margin: 2px 0px;
+  flex-shrink: 0;
+}
+
+.sidebar-bottom:hover {
+  border-radius: 8px;
+  background-color: var(--input-color);
+}
+.sidebar-bottom > button {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sidebar-bottom svg {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  fill: var(--text-color);
+}
+
+.sidebar-bottom span {
+  font-size: 18px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  overflow: hidden;
+  color: var(--text-color);
 }
 
 @media (max-width: 768px) {
