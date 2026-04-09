@@ -14,22 +14,21 @@ const loginApi = async function login(email, password) {
       }),
     });
     const data = await res.json();
-    console.log(data);
 
     if (data.success) {
-      localStorage.setItem("token", data.token);
+      setToken(data.token);
 
       message.innerText = "登入成功，歡迎回來！";
       message.style.color = "#28a745";
 
       setTimeout(() => {
-        window.location.href = "index.html"; 
-      }, 1000);
+        window.location.href = "index.html";
+      }, 1500);
     } else {
       alert(data.message);
     }
   } catch (err) {
-    message.innerText = "註冊失敗";
+    message.innerText = "登入失敗";
   }
 };
 
