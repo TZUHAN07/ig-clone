@@ -14,12 +14,21 @@ const createSuggestCard = (user) => {
   const followBtn = card.querySelector(".follow-btn");
   followBtn.addEventListener("click", async () => {
     const data = await followUser(user._id);
-    if (data&&data.success) {
+    if (data && data.success) {
       followBtn.textContent = "Following";
       followBtn.disabled = true;
       followBtn.classList.add("following");
     }
-    
+  });
+
+  const postAvatar = card.querySelector(".post-avatar");
+  postAvatar.addEventListener("click", () => {
+    window.location.href = `${basePath}profile.html?id=${user._id}`;
+  });
+
+  const postUser = card.querySelector(".post-user");
+  postUser.addEventListener("click", () => {
+    window.location.href = `${basePath}profile.html?id=${user._id}`;
   });
 
   return card;
