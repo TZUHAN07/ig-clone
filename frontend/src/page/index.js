@@ -1,3 +1,4 @@
+let currentUser = null;
 const postList = document.querySelector(".post-list");
 const modal = document.getElementById("create-modal");
 
@@ -29,11 +30,10 @@ const loadPosts = async () => {
   });
 };
 
-const loadSuggestions = async () => {
-  const [users, me] = await Promise.all([getAllUsers(), getMe()]);
+const loadSuggestions = async (meInfo) => {
+  const users = await getAllUsers();
 
   const allUsers = users.data;
-  const meInfo = me.data;
 
   const suggestions = allUsers
     .filter((user) => {
@@ -58,12 +58,16 @@ const loadSuggestions = async () => {
   });
 };
 
-document.addEventListener("sidebarLoaded", (e) => {
+document.addEventListener("sidebarLoaded", async (e) => {
   const { resetModal, getFormData } = e.detail;
   const shareBtn = document.getElementById("share-btn");
 
+  const me = await getMe();
+  currentUser = me?.data || null;
+  console.log(currentUser);
+
   loadPosts();
-  loadSuggestions();
+  loadSuggestions(currentUser);
 
   shareBtn.addEventListener("click", async () => {
     const formData = getFormData();
