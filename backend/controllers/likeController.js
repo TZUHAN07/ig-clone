@@ -21,10 +21,14 @@ const likePost = async (req, res) => {
       });
     }
 
-    await Post.findByIdAndUpdate(postId, { $push: { likes: userId } });
+    const updated = await Post.findByIdAndUpdate(
+      postId,
+      { $push: { likes: userId } },
+      { new: true },
+    );
 
     if (post.user._id.toString() !== userId.toString()) {
-      getIO.to(post.user._id.toString()).emit("notification", {
+      getIO().to(post.user._id.toString()).emit("notification", {
         type: "like",
         message: "有人按讚你的貼文",
         postId,
@@ -34,6 +38,7 @@ const likePost = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "按讚貼文",
+      likes: updated.likes,
     });
   } catch (err) {
     res.status(500).json({
@@ -63,10 +68,11 @@ const unlikePost = async (req, res) => {
       });
     }
 
-    await Post.findByIdAndUpdate(postId, { $pull: { likes: userId } });
+    const updated = await Post.findByIdAndUpdate(postId, { $pull: { likes: userId } }, {new: true}); ;
     res.status(200).json({
       success: true,
       message: "取消讚貼文",
+      likes: updated.likes,
     });
   } catch (err) {
     res.status(500).json({
