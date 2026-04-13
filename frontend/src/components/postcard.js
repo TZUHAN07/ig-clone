@@ -63,5 +63,46 @@ const createPostCard = (post) => {
     });
   });
 
+  const isLikedInit = currentUser
+    ? post.likes.some((id) => id.toString() === currentUser._id.toString())
+    : false;
+
+  const postLike = card.querySelector(".post-like");
+  const likeSpan = postLike.querySelector("span");
+  postLike.dataset.loading = "false";
+
+  if (isLikedInit) {
+    postLike.classList.add("liked");
+  }
+
+  let liked = isLikedInit;
+  let count = post.likes.length;
+
+  postLike.addEventListener("click", async () => {
+    if (postLike.dataset.loading === "true") return;
+    postLike.dataset.loading = "true";
+    const preLiked = liked;
+    const prevCount = count;
+
+    liked = !liked;
+    count += liked ? 1 : -1;
+    if (count < 0) count = 0;
+    likeSpan.textContent = count;
+    postLike.classList.toggle("liked", liked);
+
+    const data = preLiked ? await unlikePost(post._id) : await likePost(post._id);
+
+    if (!data || !data.success) {
+    liked = preLiked;
+    count = prevCount;
+    likeSpan.textContent = count;
+    postLike.classList.toggle("liked", liked);
+    alert("操作失敗");
+  }
+
+
+    postLike.dataset.loading = "false";
+  });
+
   return card;
 };
