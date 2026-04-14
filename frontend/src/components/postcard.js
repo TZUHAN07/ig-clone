@@ -104,5 +104,16 @@ const createPostCard = (post) => {
     postLike.dataset.loading = "false";
   });
 
+  const postComment = card.querySelector(".post-comment");
+  const commentSpan = postComment.querySelector("span");
+  let commentCount = post.comments.length;
+
+  postComment.addEventListener("click", () => {
+    openCommentModal(post, () => {
+      console.log("callback 被呼叫了！");
+      commentCount += 1;
+      commentSpan.textContent = commentCount;
+    });});
+
   return card;
 };
