@@ -1,12 +1,11 @@
 const Post = require("../models/postModel");
 const Comment = require("../models/commentModel");
-const getIO = require("../config/socket");
+const { getIO } = require("../config/socket");
 
 const createComments = async (req, res) => {
   const postId = req.params.id;
   const userId = req.user._id;
   const { content } = req.body;
-  console.log(content);
 
   try {
     if (!content || content.trim() === "") {
@@ -38,8 +37,8 @@ const createComments = async (req, res) => {
 
     const populated = await savedComment.populate("user", "username avatar");
 
-    if(post.user._id.toString() !== userId.toString()) {
-      getIO.to(post.user.toString()).emit("notification", {
+    if (post.user._id.toString() !== userId.toString()) {
+      getIO().to(post.user.toString()).emit("notification", {
         type: "comment",
         message: "有人留言你的貼文",
         postId,
@@ -47,7 +46,6 @@ const createComments = async (req, res) => {
         content,
       });
     }
-
     res.status(200).json({
       success: true,
       message: "新增留言成功",
@@ -84,11 +82,11 @@ const getComments = async (req, res) => {
 const deleteComment = async (req, res) => {
   const commentId = req.params.commentId;
   const userId = req.user._id;
-  console.log(commentId, userId)
+  console.log(commentId, userId);
 
   try {
     const comment = await Comment.findById(commentId);
-    console.log(comment)
+    console.log(comment);
     if (!comment) {
       return res.status(404).json({
         success: false,
