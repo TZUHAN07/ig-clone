@@ -142,6 +142,56 @@
   margin-top: 4px;
 }
 
+.modal-post-footer {
+  border-top: 1px solid var(--line-color);
+}
+
+.modal-post-actions {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+}
+
+.modal-post-actions svg {
+  width: 24px;
+  height: 24px;
+  padding: 8px;
+  box-sizing: content-box;
+  cursor: pointer;
+  color: var(--text-color);
+  stroke-width: 2px;
+  transition: transform 0.1s ease;
+}
+
+.modal-post-actions svg:hover {
+  transform: scale(1.1);
+}
+
+.modal-post-like.liked svg {
+  fill: #ed4956;
+  stroke: #ed4956;
+  animation: pop 0.3s ease;
+}
+
+.modal-post-likes-count {
+  display: flex;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 4px;
+  padding: 0 16px;         
+  margin-bottom: 2px;
+}
+
+.modal-post-time {
+  display: flex;
+  font-size: 12px;
+  color: var(--secondary-text-color);
+  text-transform: uppercase;
+  padding: 0 16px;         
+  letter-spacing: 0.2px;
+}
 /* 輸入區 */
 .comment-input-area {
   display: flex;
@@ -165,6 +215,7 @@
   max-height: 80px;
   overflow-y: auto;
   box-sizing: border-box;
+  margin: 8px;
 }
 
 .comment-input-area textarea::placeholder {

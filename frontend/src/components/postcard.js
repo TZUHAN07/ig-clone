@@ -90,16 +90,17 @@ const createPostCard = (post) => {
     likeSpan.textContent = count;
     postLike.classList.toggle("liked", liked);
 
-    const data = preLiked ? await unlikePost(post._id) : await likePost(post._id);
+    const data = preLiked
+      ? await unlikePost(post._id)
+      : await likePost(post._id);
 
     if (!data || !data.success) {
-    liked = preLiked;
-    count = prevCount;
-    likeSpan.textContent = count;
-    postLike.classList.toggle("liked", liked);
-    alert("操作失敗");
-  }
-
+      liked = preLiked;
+      count = prevCount;
+      likeSpan.textContent = count;
+      postLike.classList.toggle("liked", liked);
+      alert("操作失敗");
+    }
 
     postLike.dataset.loading = "false";
   });
@@ -109,11 +110,20 @@ const createPostCard = (post) => {
   let commentCount = post.comments.length;
 
   postComment.addEventListener("click", () => {
-    openCommentModal(post, () => {
-      console.log("callback 被呼叫了！");
-      commentCount += 1;
-      commentSpan.textContent = commentCount;
-    });});
+    openCommentModal(
+      post,
+      () => {
+        commentCount += 1;
+        commentSpan.textContent = commentCount;
+      },
+      (newLiked, newCount) => {
+        liked = newLiked;
+        count = newCount;
+        likeSpan.textContent = count;
+        postLike.classList.toggle("liked", liked);
+      },
+    );
+  });
 
   return card;
 };
