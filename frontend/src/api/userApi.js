@@ -38,3 +38,22 @@ async function followUser(targetId) {
         return null;
     }
 }
+
+async function unfollowUser(targetId) {
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE_URL}/users/${targetId}/follow`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log("取消追蹤用戶失敗", err.message);
+    return null;
+  }
+}
