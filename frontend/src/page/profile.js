@@ -1,5 +1,7 @@
 const profileContainer = document.querySelector(".profile-container");
 
+requireAuth(); 
+
 document.addEventListener("sidebarLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const profileId = urlParams.get("id");

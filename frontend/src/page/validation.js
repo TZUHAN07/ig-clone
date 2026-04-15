@@ -7,6 +7,8 @@ const errorMessage = document.getElementById("error-message");
 const submitButton = document.getElementById("submit-button");
 
 console.log("validation loaded");
+redirectIfLoggedIn(); 
+
 form.addEventListener("submit", async(e) => {
    console.log("submit triggered");
    e.preventDefault() 

@@ -1,11 +1,12 @@
 const exploreList = document.querySelector(".explore-list");
 
-const token = getToken();
-if (!token) {
-  setTimeout(() => {
-    window.location.href = "login.html";
-  }, 1500);
-}
+// const token = getToken();
+// if (!token) {
+//   setTimeout(() => {
+//     window.location.href = "login.html";
+//   }, 1500);
+// }
+requireAuth(); 
 
 const loadExplorePosts = async () => {
   const posts = await getExplorePosts();
