@@ -7,11 +7,11 @@ const errorMessage = document.getElementById("error-message");
 const submitButton = document.getElementById("submit-button");
 
 console.log("validation loaded");
-redirectIfLoggedIn(); 
+redirectIfLoggedIn();
 
-form.addEventListener("submit", async(e) => {
-   console.log("submit triggered");
-   e.preventDefault() 
+form.addEventListener("submit", async (e) => {
+  console.log("submit triggered");
+  e.preventDefault();
   let errors = [];
 
   if (usernameInput) {
@@ -22,9 +22,12 @@ form.addEventListener("submit", async(e) => {
       repeatPasswordInput.value,
     );
 
-  
-    if(errors.length === 0){
-      await registerApi(usernameInput.value, emailInput.value, passwordInput.value);
+    if (errors.length === 0) {
+      await registerApi(
+        usernameInput.value,
+        emailInput.value,
+        passwordInput.value,
+      );
     }
   } else {
     errors = getLoginFormErrors(emailInput.value, passwordInput.value);
@@ -56,7 +59,7 @@ function getSignupFormErrors(username, email, password, repeatPassword) {
     passwordInput.parentElement.classList.add("incorrect");
   }
 
-  if (password.length <8){
+  if (password.length < 8) {
     errors.push("密碼長度至少為8");
     passwordInput.parentElement.classList.add("incorrect");
   }
@@ -86,7 +89,7 @@ const getLoginFormErrors = (email, password) => {
   return errors;
 };
 
-const allInputs = Array.from(document.querySelectorAll("input"))
+const allInputs = Array.from(document.querySelectorAll("input"));
 allInputs.forEach((input) => {
   input.addEventListener("input", () => {
     if (input.parentElement.classList.contains("incorrect")) {
@@ -96,3 +99,12 @@ allInputs.forEach((input) => {
   });
 });
 
+document.querySelectorAll(".toggle-password").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const wrapper = btn.closest(".password-wrapper");
+    const input = wrapper.querySelector("input");
+    const isHidden = input.type === "password";
+    input.type = isHidden ? "text" : "password";
+    wrapper.classList.toggle("password-visible", isHidden);
+  });
+});

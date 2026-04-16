@@ -90,10 +90,10 @@ form button {
   cursor: pointer;
   transition: 150ms ease;
 }
-form button:hover {
+form button[type="submit"]:hover {
   background-color: var(--text-color);
 }
-form button:focus {
+form button[type="submit"]:focus {
   outline: none;
   background-color: var(--text-color);
 }
@@ -112,13 +112,78 @@ a:hover {
   }
 }
 
-form div.incorrect label{
-    background-color: var(--error-color);
+form div.incorrect label {
+  background-color: var(--error-color);
 }
-form div.incorrect input{
-    border-color: var(--error-color);
+form div.incorrect input {
+  border-color: var(--error-color);
 }
 
-#error-message{
-    color: var(--error-color);
+#error-message {
+  color: var(--error-color);
+}
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  height: 32px;
+  width: 32px;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  fill: var(--secondary-text-color);
+  opacity: 0.6;
+  transition:
+    opacity 150ms ease,
+    fill 150ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.toggle-password:hover {
+  opacity: 1;
+}
+
+.toggle-password:active {
+  fill: var(--secondary-text-color);
+  opacity: 1;
+}
+
+.toggle-password:focus {
+  outline: none;
+  opacity: 0.8;
+  background-color: transparent;
+}
+
+.toggle-password:focus-visible {
+  outline: none;
+}
+
+.password-wrapper input {
+  padding-right: 44px;
+}
+
+.eye-open {
+  display: none;
+}
+.eye-closed {
+  display: block;
+}
+
+.password-wrapper.password-visible .eye-open {
+  display: block;
+}
+.password-wrapper.password-visible .eye-closed {
+  display: none;
 }
