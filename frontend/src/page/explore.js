@@ -1,3 +1,4 @@
+let currentUser = null;
 const exploreList = document.querySelector(".explore-list");
 
 // const token = getToken();

@@ -7,5 +7,9 @@ const createExploreCard = (post) => {
 
     `;
 
+  card.addEventListener("click", () => {
+    openCommentModal(post);
+  });
+
   return card;
 };
