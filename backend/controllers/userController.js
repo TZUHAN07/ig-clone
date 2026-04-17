@@ -95,9 +95,9 @@ const deleteUser = async (req, res) => {
       });
     }
 
-    const user = await User.findById(id); 
+    const user = await User.findById(id);
     if (user && user.avatar) {
-      await deleteImageFromS3(user.avatar); 
+      await deleteImageFromS3(user.avatar);
     }
 
     const deletedUser = await User.findByIdAndDelete(id);
@@ -159,10 +159,36 @@ const getMe = async (req, res) => {
   }
 };
 
+const searchUsers = async (req, res) => {
+  const { query } = req.query;
+  try {
+    if (!query || !query.trim()) {
+      return res.json({ success: true, data: [] });
+    }
+
+    const users = await User.find({
+      username: { $regex: query, $options: "i" },
+    })
+      .select("username avatar")
+      .limit(20);
+
+    res.json({
+      success: true,
+      data: users,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   getAllUsers,
   updateUser,
   deleteUser,
   getUser,
   getMe,
+  searchUsers,
 };

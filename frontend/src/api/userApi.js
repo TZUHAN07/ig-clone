@@ -57,3 +57,22 @@ async function unfollowUser(targetId) {
     return null;
   }
 }
+
+async function searchUsers(query) {
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE_URL}/users/search?query=${encodeURIComponent(query)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log("搜尋用戶失敗", err.message);
+    return null;
+  }
+}

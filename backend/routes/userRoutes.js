@@ -9,6 +9,7 @@ const {
   updateUser,
   deleteUser,
   getMe,
+  searchUsers,    
 } = require("../controllers/userController");
 
 const {
@@ -19,6 +20,7 @@ const {
 } = require("../controllers/followController");
 
 router.get("/", getAllUsers);
+router.get("/search", authMiddleware, searchUsers);
 router.get("/me", authMiddleware, getMe);
 router.get("/:id", getUser);
 router.put("/:id", authMiddleware, upload.single("avatar"), updateUser);
