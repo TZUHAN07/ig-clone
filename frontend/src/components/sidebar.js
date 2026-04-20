@@ -110,6 +110,7 @@ function loadSidebar() {
 
   sidebarContainer.appendChild(sidebar);
 
+  loadSearchPanel();
   loadModal();
   loadLogout();
   // 使用 setTimeout 確保 DOM 已載入完成後再 dispatch event
@@ -120,7 +121,7 @@ function loadSidebar() {
           detail: { resetModal, getFormData },
         }),
       );
-    }, 0)
+    }, 0);
   });
 }
 
@@ -257,8 +258,113 @@ const loadProfile = async () => {
 const loadLogout = () => {
   const logout = document.querySelector(".logout-btn");
   logout.addEventListener("click", () => {
-    removeToken(); 
+    removeToken();
     window.location.href = "login.html";
+  });
+};
+
+const loadSearchPanel = () => {
+  const panel = document.createElement("div");
+  panel.className = "search-panel";
+
+  panel.innerHTML = `  
+    <button class="search-close-btn">✕</button>
+    <div class="search-panel-header">
+    <h2>Search</h2>
+    </div>
+
+    <div class="search-wrapper">
+    <input type="text" class="search-input" placeholder="Search" />
+            <button class="input-close-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="10" height="10">
+    <path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/>
+  </svg>
+            </button>
+    </div >
+    <div class="search-results"></div>
+    `;
+
+  sidebarContainer.appendChild(panel);
+
+  const sidebar = document.querySelector(".sidebar");
+  const searchBtn = document.querySelector(".search-btn");
+  const closeBtn = panel.querySelector(".search-close-btn");
+  const searchInput = panel.querySelector(".search-input");
+  const searchResults = panel.querySelector(".search-results");
+
+  let isOpen = false;
+  let debounceTimer = null;
+
+  const openPanel = () => {
+    isOpen = true;
+    panel.classList.add("open");
+    sidebar.classList.add("sidebar-collapsed");
+    searchInput.focus();
+  };
+
+  const closePanel = () => {
+    isOpen = false;
+    panel.classList.remove("open");
+    sidebar.classList.remove("sidebar-collapsed");
+    searchInput.value = "";
+    searchResults.innerHTML = "";
+  };
+
+  searchBtn.addEventListener("click", () => {
+    if (isOpen) {
+      closePanel();
+    } else {
+      openPanel();
+    }
+  });
+
+  closeBtn.addEventListener("click", () => {
+    closePanel();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!isOpen) return;
+    if (panel.contains(e.target) || searchBtn.contains(e.target)) return;
+
+    closePanel();
+  });
+
+  searchInput.addEventListener("input", async (event) => {
+    clearTimeout(debounceTimer);
+    const query = searchInput.value.trim();
+
+    if (!query) {
+      searchResults.innerHTML = "";
+      return;
+    }
+
+    debounceTimer = setTimeout(async () => {
+      const data = await searchUsers(query);
+      searchResults.innerHTML = "";
+
+      if (!data || !data.success || data.data.length === 0) {
+        searchResults.innerHTML = `<p class="search-no-result">No results found.</p>`;
+        return;
+      }
+
+      data.data.forEach((user) => {
+        const card = document.createElement("a");
+        card.href = `profile.html?id=${user._id}`;
+        card.className = "search-result-card";
+        card.innerHTML = `
+        <div class="result-card">
+        <div class="result-info">
+          <img src="${user.avatar}" alt="${user.username}" />
+          <span>${user.username}</span>
+        </div>
+          <button class="result-close-btn">x</button>
+        </div>
+        `;
+
+
+        searchResults.appendChild(card);
+      });
+    }, 300);
   });
 };
 
