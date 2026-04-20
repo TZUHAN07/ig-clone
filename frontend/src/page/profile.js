@@ -1,6 +1,6 @@
 const profileContainer = document.querySelector(".profile-container");
 
-requireAuth(); 
+requireAuth();
 
 document.addEventListener("sidebarLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -8,8 +8,8 @@ document.addEventListener("sidebarLoaded", async () => {
 
   const me = await getMe();
   const myId = me.data._id;
-
   const targetId = profileId || myId;
+  const isMyProfile = !profileId || profileId === myId;
 
   const [userRes, postsRes] = await Promise.all([
     getUser(targetId),
@@ -41,10 +41,16 @@ document.addEventListener("sidebarLoaded", async () => {
 
   const profileBtn = document.getElementById("profile-btn");
 
-  if (!profileId || profileId === myId) {
+  if (isMyProfile) {
     profileBtn.textContent = "Edit Profile";
+
+    // 只有自己的 profile 才能換頭貼
+    avatarEl.classList.add("avatar-editable");
+    avatarEl.addEventListener("click", () => openAvatarModal());
   } else {
-    let isFollowing = user.followers.some((id) => id === myId || id.toString() === myId);
+    let isFollowing = user.followers.some(
+      (id) => id === myId || id.toString() === myId,
+    );
     profileBtn.textContent = isFollowing ? "Following" : "Follow";
 
     profileBtn.addEventListener("click", async () => {
@@ -57,7 +63,7 @@ document.addEventListener("sidebarLoaded", async () => {
         profileBtn.textContent = "Following";
         isFollowing = true;
       }
-    })
+    });
   }
 
   const profileList = document.querySelector(".profile-list");
@@ -68,4 +74,60 @@ document.addEventListener("sidebarLoaded", async () => {
     img.alt = post.user.username;
     profileList.appendChild(img);
   });
+
+  function openAvatarModal() {
+    const existing = document.getElementById("avatar-modal");
+    if (existing) existing.remove();
+
+    const modal = document.createElement("div");
+    modal.id = "avatar-modal";
+    modal.className = "modal-overlay";
+
+    modal.innerHTML = `
+      <div class="avatar-modal-content">
+        <h3>Change Profile Photo</h3>
+        <button class="avatar-option upload-option">Upload Photo</button>
+        <button class="avatar-option cancel-option">Cancel</button>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal.querySelector(".upload-option").addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.click();
+
+      input.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("avatar", file);
+
+        const res = await changeUserAvatar(myId, formData);
+
+        if (res && res.success) {
+          avatarEl.src = res.data.avatar;
+          const sidebarAvatar = document.querySelector(".nav-avatar");
+          if (sidebarAvatar) sidebarAvatar.src = res.data.avatar;
+        } else {
+          alert("Upload failed, please try again.");
+        }
+
+        modal.remove();
+      });
+    });
+
+    modal.querySelector(".cancel-option").addEventListener("click", () => {
+      modal.remove();
+    });
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.remove();
+      }
+    });
+  }
 });
