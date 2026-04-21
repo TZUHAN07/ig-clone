@@ -79,7 +79,7 @@
 }
 
 .nav-menu > li:hover {
-  background-color: var(--input-color);
+  background-color: var(--search-bg-color);
 }
 
 .nav-menu > li > a,
@@ -130,7 +130,7 @@
 
 .sidebar-bottom:hover {
   border-radius: 8px;
-  background-color: var(--input-color);
+  background-color: var(--search-bg-color);
 }
 .sidebar-bottom > button {
   display: flex;
