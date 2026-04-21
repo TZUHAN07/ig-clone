@@ -379,7 +379,7 @@
 }
 
 .search-close-btn:hover {
-  background-color: var(--search-bg-color);
+  background-color: var(--hover-bg-color);
 }
 
 .search-wrapper {
@@ -427,7 +427,7 @@
   opacity: 0.6;
 }
 .search-input::placeholder {
-  color: var(--secondary-text-color);
+  color: var(--hover-text-color);
 }
 
 .search-results {
@@ -453,7 +453,7 @@
 }
 
 .result-card:hover {
-  background-color: var(--search-bg-color);
+  background-color: var(--hover-bg-color);
 }
 
 .result-info {
