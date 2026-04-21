@@ -1,5 +1,5 @@
+let currentUser = null; 
 const profileContainer = document.querySelector(".profile-container");
-
 requireAuth();
 
 document.addEventListener("sidebarLoaded", async () => {
@@ -8,6 +8,8 @@ document.addEventListener("sidebarLoaded", async () => {
 
   const me = await getMe();
   const myId = me.data._id;
+  currentUser = me.data;
+
   const targetId = profileId || myId;
   const isMyProfile = !profileId || profileId === myId;
 
@@ -72,6 +74,9 @@ document.addEventListener("sidebarLoaded", async () => {
     const img = document.createElement("img");
     img.src = post.image;
     img.alt = post.user.username;
+    img.addEventListener("click", () => {
+      openCommentModal(post);
+    });
     profileList.appendChild(img);
   });
 

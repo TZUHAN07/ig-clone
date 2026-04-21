@@ -81,53 +81,54 @@ async function openCommentModal(post, onCommentAdded, onLikeChanged) {
   postTime.textContent = formatTime(post.createdAt);
 
   const isLikedInit = currentUser
-  ? post.likes.some((id) => id.toString() === currentUser._id.toString())
-  : false;
+    ? post.likes.some((id) => id.toString() === currentUser._id.toString())
+    : false;
 
-modalLike.classList.toggle("liked", isLikedInit);
-modalLike.dataset.loading = "false";
-
-let liked = isLikedInit;
-let count = post.likes.length;
-
-modalLike.addEventListener("click", async () => {
-  if (modalLike.dataset.loading === "true") return;
-  modalLike.dataset.loading = "true";
-
-  const preLiked = liked;
-  const prevCount = count;
-
-  liked = !liked;
-  count += liked ? 1 : -1;
-  if (count < 0) count = 0;
-  likesCount.textContent = `${count} likes`;
-  modalLike.classList.toggle("liked", liked);
-
-  const data = preLiked ? await unlikePost(post._id) : await likePost(post._id);
-
-  if (!data || !data.success) {
-    liked = preLiked;
-    count = prevCount;
-    likesCount.textContent = `${count} likes`;
-    modalLike.classList.toggle("liked", liked);
-    alert("操作失敗");
-  }
-
+  modalLike.classList.toggle("liked", isLikedInit);
   modalLike.dataset.loading = "false";
 
-  if (onLikeChanged) onLikeChanged(liked, count);
-});
+  let liked = isLikedInit;
+  let count = post.likes.length;
 
-modalComment.addEventListener("click", () => {
-  commentInput.focus();
-});
+  modalLike.addEventListener("click", async () => {
+    if (modalLike.dataset.loading === "true") return;
+    modalLike.dataset.loading = "true";
 
+    const preLiked = liked;
+    const prevCount = count;
+
+    liked = !liked;
+    count += liked ? 1 : -1;
+    if (count < 0) count = 0;
+    likesCount.textContent = `${count} likes`;
+    modalLike.classList.toggle("liked", liked);
+
+    const data = preLiked
+      ? await unlikePost(post._id)
+      : await likePost(post._id);
+
+    if (!data || !data.success) {
+      liked = preLiked;
+      count = prevCount;
+      likesCount.textContent = `${count} likes`;
+      modalLike.classList.toggle("liked", liked);
+      alert("操作失敗");
+    }
+
+    modalLike.dataset.loading = "false";
+
+    if (onLikeChanged) onLikeChanged(liked, count);
+  });
+
+  modalComment.addEventListener("click", () => {
+    commentInput.focus();
+  });
 
   image.src = post.image;
   avatar.src = post.user.avatar;
   username.textContent = post.user.username;
   caption.innerHTML = `
-    <img class="comment-modal-avatar" src=${post.user.avatar} alt=${post.user.username} />
+    <img class="comment-avatar" src=${post.user.avatar} alt=${post.user.username} />
     <div class="comment-content">
         <div class="comment-header">
             <span class="comment-username">${post.user.username}</span>
@@ -136,6 +137,30 @@ modalComment.addEventListener("click", () => {
         <span class="comment-timestamp">${formatTime(post.createdAt)}</span>
     </div>
   `;
+
+  if (modal._profileClickHandler) {
+    modal.removeEventListener("click", modal._profileClickHandler);
+  }
+
+  modal._profileClickHandler = (e) => {
+    const avatar = e.target.closest(".comment-modal-avatar, .comment-avatar");
+    const username = e.target.closest(
+      ".comment-username, .comment-modal-username",
+    );
+    const clicked = avatar || username;
+
+    if (!clicked) return;
+
+    e.stopPropagation();
+
+    const card = clicked.closest(".comment-card");
+    if (card && card.dataset.userId) {
+      window.location.href = `profile.html?id=${card.dataset.userId}`;
+    } else {
+      window.location.href = `profile.html?id=${post.user._id}`;
+    }
+  };
+  modal.addEventListener("click", modal._profileClickHandler);
 
   commentInput.value = "";
   commentList.innerHTML =
@@ -198,6 +223,7 @@ modalComment.addEventListener("click", () => {
 function createCommentCard(comment) {
   const card = document.createElement("div");
   card.className = "comment-card";
+  card.dataset.userId = comment.user._id;
 
   card.innerHTML = `
         <img class="comment-avatar" src="${comment.user.avatar}" alt="${comment.user.username}" />
