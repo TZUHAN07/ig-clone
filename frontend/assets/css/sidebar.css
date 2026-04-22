@@ -378,9 +378,6 @@
   transition: background-color 0.15s ease;
 }
 
-.search-close-btn:hover {
-  background-color: var(--hover-bg-color);
-}
 
 .search-wrapper {
   padding: 0 16px;

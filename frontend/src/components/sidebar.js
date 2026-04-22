@@ -268,9 +268,9 @@ const loadSearchPanel = () => {
   panel.className = "search-panel";
 
   panel.innerHTML = `  
-    <button class="search-close-btn">✕</button>
     <div class="search-panel-header">
     <h2>Search</h2>
+    <button class="search-close-btn">✕</button>
     </div>
 
     <div class="search-wrapper">
@@ -291,6 +291,7 @@ const loadSearchPanel = () => {
   const closeBtn = panel.querySelector(".search-close-btn");
   const searchInput = panel.querySelector(".search-input");
   const searchResults = panel.querySelector(".search-results");
+  const inputCloseBtn = panel.querySelector(".input-close-btn");
 
   let isOpen = false;
   let debounceTimer = null;
@@ -320,6 +321,12 @@ const loadSearchPanel = () => {
 
   closeBtn.addEventListener("click", () => {
     closePanel();
+  });
+
+  inputCloseBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    searchResults.innerHTML = "";
+    searchInput.focus();
   });
 
   document.addEventListener("click", (e) => {
@@ -360,7 +367,6 @@ const loadSearchPanel = () => {
           <button class="result-close-btn">x</button>
         </div>
         `;
-
 
         searchResults.appendChild(card);
       });
