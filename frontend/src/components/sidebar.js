@@ -111,6 +111,7 @@ function loadSidebar() {
   sidebarContainer.appendChild(sidebar);
 
   loadSearchPanel();
+  loadBottomNav();
   loadModal();
   loadLogout();
   // 使用 setTimeout 確保 DOM 已載入完成後再 dispatch event
@@ -373,5 +374,60 @@ const loadSearchPanel = () => {
     }, 300);
   });
 };
+function loadBottomNav() {
+  const bottomNav = document.createElement("nav");
+  bottomNav.className = "bottom-nav";
+
+  bottomNav.innerHTML = `
+    <a href="index.html" class="bottom-nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+        <path d="M160-120v-480l320-240 320 240v480H560v-280H400v280H160Z"/>
+      </svg>
+    </a>
+    <a href="explore.html" class="bottom-nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+        <path d="m300-300 280-80 80-280-280 80-80 280Zm180-120q-25 0-42.5-17.5T420-480q0-25 17.5-42.5T480-540q25 0 42.5 17.5T540-480q0 25-17.5 42.5T480-420Zm0 340q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
+      </svg>
+    </a>
+    <button class="bottom-nav-item bottom-create-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+      </svg>
+    </button>
+    <a href="explore.html?search=true" class="bottom-nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+        <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+      </svg>
+    </a>
+    <a href="profile.html" class="bottom-nav-item bottom-profile">
+    </a>
+    `;
+  document.body.appendChild(bottomNav);
+
+  bottomNav
+    .querySelector(".bottom-create-btn")
+    .addEventListener("click", () => {
+      const modal = document.getElementById("create-modal");
+      if (modal) modal.classList.remove("hidden");
+    });
+
+  loadBottomProfile(bottomNav);
+}
+
+async function loadBottomProfile(bottomNav) {
+  const profileLink = bottomNav.querySelector(".bottom-profile");
+  if (!profileLink) return;
+
+  const user = await getMe();
+  if (user && user.data) {
+    profileLink.innerHTML = `<img src="${user.data.avatar}" alt="${user.data.username}" />`;
+  } else {
+    profileLink.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+        <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/>
+      </svg>
+    `;
+  }
+}
 
 loadSidebar();

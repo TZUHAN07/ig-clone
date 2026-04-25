@@ -7,11 +7,21 @@
     <link rel="stylesheet" href="../assets/css/main.css" />
     <link rel="stylesheet" href="../assets/css/sidebar.css" />
     <link rel="stylesheet" href="../assets/css/explore.css" />
-    <link rel="stylesheet" href="../assets/css/comment.css">
-</head>
+    <link rel="stylesheet" href="../assets/css/comment.css" />
+  </head>
   <body>
     <div class="sidebar-container"></div>
     <main class="explore-content">
+      <div class="explore-search-bar">
+        <div class="explore-search-wrapper">
+          <input
+            type="text"
+            class="explore-search-input"
+            placeholder="Search"
+          />
+        </div>
+        <button class="explore-search-cancel">Cancel</button>
+      </div>
       <div class="explore-list"></div>
     </main>
     <script src="../config.js"></script>
@@ -20,10 +30,10 @@
     <script src="../src/api/exploreApi.js"></script>
     <script src="../src/api/avatarApi.js"></script>
     <script src="../src/api/postApi.js"></script>
-    <script src="../src/api/commentApi.js"></script> 
-    <script src="../src/api/userApi.js"></script> 
+    <script src="../src/api/commentApi.js"></script>
+    <script src="../src/api/userApi.js"></script>
     <script src="../src/components/sidebar.js"></script>
-     <script src="../src/components/commentModal.js"></script>
+    <script src="../src/components/commentModal.js"></script>
     <script src="../src/components/explorecard.js"></script>
     <script src="../src/page/explore.js"></script>
   </body>
