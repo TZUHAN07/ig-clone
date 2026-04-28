@@ -88,57 +88,50 @@ document.addEventListener("sidebarLoaded", async () => {
         commentsCountEl.textContent = `${currentCount + 1} `;
       });
     });
-  }
 
-  const likesCountEl = document.querySelector(".post-page-likes-count");
-  const commentsCountEl = document.querySelector(".post-page-comments-count");
-  const timeEl = document.querySelector(".post-page-time");
+    const likesCountEl = document.querySelector(".post-page-likes-count");
+    const commentsCountEl = document.querySelector(".post-page-comments-count");
+    const timeEl = document.querySelector(".post-page-time");
 
-  likesCountEl.textContent = `${post.likes.length} `;
-  commentsCountEl.textContent = `${post.comments.length} `;
-  timeEl.textContent = formatTime(post.createdAt);
+    likesCountEl.textContent = `${post.likes.length} `;
+    commentsCountEl.textContent = `${post.comments.length} `;
+    timeEl.textContent = formatTime(post.createdAt);
 
-  const likeBtn = document.querySelector(".post-page-overlay-like");
-  const isLikedInit = currentUser
-    ? post.likes.some((id) => id.toString() === currentUser._id.toString())
-    : false;
+    const likeBtn = document.querySelector(".post-page-overlay-like");
+    const isLikedInit = currentUser
+      ? post.likes.some((id) => id.toString() === currentUser._id.toString())
+      : false;
 
-  let liked = isLikedInit;
-  let count = post.likes.length;
-  likeBtn.classList.toggle("liked", liked);
-  likeBtn.dataset.loading = "false";
-
-  likeBtn.addEventListener("click", async () => {
-    if (likeBtn.dataset.loading === "true") return;
-    likeBtn.dataset.loading = "true";
-
-    const preLiked = liked;
-    const prevCount = count;
-
-    liked = !liked;
-    count += liked ? 1 : -1;
-    if (count < 0) count = 0;
-    likesCountEl.textContent = `${count}`;
+    let liked = isLikedInit;
+    let count = post.likes.length;
     likeBtn.classList.toggle("liked", liked);
-
-    const data = preLiked
-      ? await unlikePost(post._id)
-      : await likePost(post._id);
-
-    if (!data || !data.success) {
-      liked = preLiked;
-      count = prevCount;
-      likesCountEl.textContent = `${count} likes`;
-      likeBtn.classList.toggle("liked", liked);
-    }
-
     likeBtn.dataset.loading = "false";
-  });
 
-  document
-    .querySelector(".post-page-overlay-comment")
-    .addEventListener("click", () => {
-      openCommentModal(post);
+    likeBtn.addEventListener("click", async () => {
+      if (likeBtn.dataset.loading === "true") return;
+      likeBtn.dataset.loading = "true";
+
+      const preLiked = liked;
+      const prevCount = count;
+
+      liked = !liked;
+      count += liked ? 1 : -1;
+      if (count < 0) count = 0;
+      likesCountEl.textContent = `${count}`;
+      likeBtn.classList.toggle("liked", liked);
+
+      const data = preLiked
+        ? await unlikePost(post._id)
+        : await likePost(post._id);
+
+      if (!data || !data.success) {
+        liked = preLiked;
+        count = prevCount;
+        likesCountEl.textContent = `${count} likes`;
+        likeBtn.classList.toggle("liked", liked);
+      }
+
+      likeBtn.dataset.loading = "false";
     });
+  }
 });
-
