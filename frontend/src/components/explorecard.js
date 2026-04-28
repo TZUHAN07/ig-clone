@@ -8,7 +8,11 @@ const createExploreCard = (post) => {
     `;
 
   card.addEventListener("click", () => {
-    openCommentModal(post);
+    if (window.innerWidth < 768) {
+      window.location.href = `${basePath}post.html?id=${post._id}`;
+    } else {
+      openCommentModal(post);
+    }
   });
 
   return card;

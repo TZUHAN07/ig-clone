@@ -1,0 +1,192 @@
+body {
+  min-height: 100vh;
+  background-color: var(--base-color);
+  color: var(--text-color);
+  display: flex;
+}
+
+.post-page {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0 0 60px;
+  margin-left: 80px;
+}
+
+.post-page-top-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 480px;
+  padding: 10px 14px;
+  position: relative;
+}
+
+.post-page-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.post-page-back svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--text-color);
+}
+
+.post-page-top-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.post-page-image-area {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+}
+
+.post-page-image {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+}
+
+.post-page-image-overlay {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.post-page-overlay-like,
+.post-page-overlay-comment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.post-page-overlay-like svg,
+.post-page-overlay-comment svg {
+  width: 28px;
+  height: 28px;
+  color: var(--base-color);
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
+  transition: transform 0.1s ease;
+}
+
+.post-page-overlay-like svg:hover,
+.post-page-overlay-comment svg:hover {
+  transform: scale(1.15);
+}
+
+.post-page-overlay-like.liked svg {
+  fill: #ed4956;
+  stroke: #ed4956;
+}
+
+.post-page-likes-count,
+.post-page-comments-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.post-page-info {
+  width: 100%;
+  max-width: 480px;
+  padding: 0 14px;
+  text-align: left;
+}
+
+.post-page-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+}
+
+.post-page-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.post-page-username {
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.post-page-username:hover {
+  text-decoration: underline;
+}
+
+.post-page-caption {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.post-page-caption-user {
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.post-page-caption-text {
+  white-space: pre-wrap;
+}
+
+.post-page-time {
+  display: block;
+  font-size: 12px;
+  color: var(--secondary-text-color);
+  margin-bottom: 12px;
+}
+
+.post-page-follow-btn {
+  margin-left: auto;
+  background: none;
+  border: var(--line-color) 1px solid;
+  border-radius: 15px;
+  color: var(--line-color);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 8px;
+  opacity: 0.8;
+}
+
+.post-page-follow-btn:hover {
+  opacity: 1;
+}
+
+/* ===== 手機版 ===== */
+@media (max-width: 768px) {
+  .post-page {
+    margin-left: 0;
+  }
+
+  .post-page-top-bar,
+  .post-page-image-area,
+  .post-page-info {
+    max-width: 100%;
+  }
+}
