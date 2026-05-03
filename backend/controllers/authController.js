@@ -8,17 +8,46 @@ const register = async (req, res) => {
 
   try {
     if (!username || !email || !password) {
-      return res.status(400).json({ message: "請提供所有必填欄位" });
+      return res
+        .status(400)
+        .json({ success: false, message: "請提供所有必填欄位" });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "請提供有效的電子郵件地址" });
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "密碼需至少8碼，包含大小寫字母與數字",
+        });
+    }
+
+    if (username.length < 2 || username.length > 20) {
+      return res
+        .status(400)
+        .json({ success: false, message: "用戶名需介於 2-20 個字元" });
     }
 
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
-      return res.status(400).json({ message: "此電子郵件已被使用" });
+      return res
+        .status(400)
+        .json({ success: false, message: "此電子郵件已被使用" });
     }
 
     const existingUsername = await User.findOne({ username: username });
     if (existingUsername) {
-      return res.status(400).json({ message: "此用戶名已被使用" });
+      return res
+        .status(400)
+        .json({ success: false, message: "此用戶名已被使用" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -38,7 +67,7 @@ const register = async (req, res) => {
       data: savedUser,
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
