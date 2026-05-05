@@ -1,9 +1,9 @@
  const { API_BASE_URL } = config;
- async function getFollowingPosts() {
+ async function getFollowingPosts(page =1 ) {
   const token = getToken();
 
   try {
-    const res = await fetch(`${API_BASE_URL}/posts/following`, {
+    const res = await fetch(`${API_BASE_URL}/posts/following?page=${page}&limit=5`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

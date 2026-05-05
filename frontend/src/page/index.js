@@ -1,4 +1,8 @@
 let currentUser = null;
+let currentPage = 1;
+let isLoading = false;
+let hasMore = true;
+
 const postList = document.querySelector(".post-list");
 const modal = document.getElementById("create-modal");
 
@@ -18,19 +22,57 @@ const token = getToken();
 //   }, 1500);
 // }
 
-requireAuth();  
+requireAuth();
 
-const loadPosts = async () => {
-  postList.innerHTML = "<p style='text-align:center;'>貼文載入中...</p>";
-  const posts = await getFollowingPosts();
+const loadPosts = async (page = 1) => {
+  if (isLoading || !hasMore) return;
+  isLoading = true;
 
-  postList.innerHTML = "";
+  const spinner = document.createElement("div");
+  spinner.className = "loading-spinner";
+  spinner.id = "loading-spinner";
+  postList.after(spinner);
 
-  posts.data.forEach((post) => {
+  const result = await getFollowingPosts(page);
+
+  document.getElementById("loading-spinner")?.remove();
+
+  if (page === 1) postList.innerHTML = "";
+
+  if (!result || !result.data) {
+    isLoading = false;
+    return;
+  }
+
+  result.data.forEach((post) => {
     const card = createPostCard(post);
     postList.appendChild(card);
   });
+
+  hasMore = result.pagination.hasMore;
+  isLoading = false;
+
+  if (hasMore) observer.observe(sentinel);
 };
+
+const sentinel = document.createElement("div");
+sentinel.id = "sentinel";
+postList.after(sentinel);
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    if (entries[0].isIntersecting && !isLoading && hasMore) {
+      currentPage++;
+      loadPosts(currentPage);
+      observer.unobserve(entries[0].target);
+    }
+  },
+  {
+    root: null,
+    rootMargin: "0px 0px 200px 0px",
+    threshold: 0.1,
+  },
+);
 
 const loadSuggestions = async (meInfo) => {
   const users = await getAllUsers();

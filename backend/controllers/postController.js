@@ -228,42 +228,43 @@ const getAllPosts = async (req, res) => {
 
 const getFollowingPosts = async (req, res) => {
   const userId = req.user._id;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const skip = (page - 1) * limit;
 
   try {
     const me = await User.findById(userId).select("following");
 
-    const posts = await Post.find({
-      user: {
-        $in: [...me.following],
-      },
-    })
+    let query = { user: { $in: [...me.following] } };
+
+    const followingCount = await Post.countDocuments(query);
+
+    let finalQuery = query;
+    if (followingCount === 0) {
+      finalQuery = { user: { $ne: userId } };
+    }
+
+    const total = await Post.countDocuments(finalQuery);
+
+    const posts = await Post.find(finalQuery)
       .populate({
         path: "user",
         select: "username avatar",
       })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
-    if ( posts.length === 0) {
-      const otherPosts = await Post.find({
-        user: { $ne: userId },
-      })
-        .populate({
-          path: "user",
-          select: "username avatar",
-        })
-        .sort({ createdAt: -1 });
-
-      return res.status(200).json({
-        success: true,
-        message: "取得追蹤貼文成功",
-        data: otherPosts,
-      });
-    }
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "取得追蹤貼文成功",
       data: posts,
+      pagination: {
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+        hasMore: page * limit < total,
+      },
     });
   } catch (err) {
     res.status(500).json({
