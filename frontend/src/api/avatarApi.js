@@ -9,10 +9,9 @@ async function getMe() {
       },
     });
     const data = await res.json();
-    console.log(data);
     return data;
   } catch (err) {
-    console.log("取得本人失敗", err.message);
+    console.error("取得本人失敗", err.message);
     return null;
   }
 }
@@ -28,10 +27,9 @@ async function changeUserAvatar(userId, formData) {
       body: formData,
     });
     const data = await res.json();
-    console.log(data);
     return data;
   } catch (err) {
-    console.log("更新頭像失敗", err.message);
+    console.error("更新頭像失敗", err.message);
     return null;
   }
 }

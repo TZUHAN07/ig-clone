@@ -108,7 +108,6 @@ document.addEventListener("sidebarLoaded", async (e) => {
 
   const me = await getMe();
   currentUser = me?.data || null;
-  console.log(currentUser);
 
   loadPosts();
   loadSuggestions(currentUser);

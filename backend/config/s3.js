@@ -45,7 +45,7 @@ const deleteImageFromS3 = async (fileUrl) => {
 
     await s3.send(command);
   } catch (err) {
-    console.log(err);
+    console.error;
   }
 };
 module.exports = { uploadToS3, deleteImageFromS3 };

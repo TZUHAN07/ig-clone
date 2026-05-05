@@ -2,7 +2,6 @@ const sharp = require("sharp");
 
 const resizeImage = async (buffer) => {
   const originalSize = buffer.length / 1024;
-  console.log("原始大小:", originalSize.toFixed(2), "KB");
 
   try {
     const resizedBuffer = await sharp(buffer)
@@ -20,16 +19,13 @@ const resizeImage = async (buffer) => {
 
     const newSize = resizedBuffer.length / 1024;
 
-    console.log("壓縮後:", newSize.toFixed(2), "KB");
-
     if (newSize > originalSize) {
-      console.log("處理後的檔案為變小，採用原始檔案");
       return buffer;
     }
 
     return resizedBuffer;
   } catch (err) {
-    console.log("圖片處理失敗：", err);
+    console.error("圖片處理失敗：", err);
     return buffer;
   }
 };

@@ -86,7 +86,6 @@ const updatePosts = async (req, res) => {
   const userId = req.user._id;
 
   const { content } = req.body || {};
-  console.log("content", content);
   const updateData = {};
 
   try {
@@ -129,7 +128,6 @@ const updatePosts = async (req, res) => {
 
     if (oldImageUrl) {
       deleteImageFromS3(oldImageUrl);
-      console.log("已刪除就圖片");
     }
 
     if (Object.keys(updateData).length === 0) {
@@ -145,7 +143,6 @@ const updatePosts = async (req, res) => {
       path: "user",
       select: "username avatar",
     });
-    console.log(updatePost);
 
     res.status(200).json({
       success: true,

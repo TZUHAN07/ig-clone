@@ -8,10 +8,9 @@ async function getUserPosts(userId) {
       },
     });
     const data = await res.json();
-    console.log(data);
     return data;
   } catch (err) {
-    console.log("取得貼文失敗", err.message);
+    console.error("取得貼文失敗", err.message);
     return null;
   }
 }
@@ -27,10 +26,9 @@ async function getUser(userId) {
       },
     });
     const data = await res.json();
-    console.log(data);
     return data;
   } catch (err) {
-    console.log("取得本人失敗", err.message);
+    console.error("取得本人失敗", err.message);
     return null;
   }
 }

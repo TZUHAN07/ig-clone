@@ -58,7 +58,6 @@ const register = async (req, res) => {
       email: email,
       password: hashedPassword,
     });
-    console.log(newUser);
 
     const savedUser = await newUser.save();
     res.status(201).json({
@@ -82,7 +81,6 @@ const login = async (req, res) => {
       });
     }
     const user = await User.findOne({ email: email });
-    console.log(user);
 
     if (!user) {
       return res.status(400).json({
@@ -107,7 +105,6 @@ const login = async (req, res) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE || "7d",
     });
-    console.log(token);
 
     res.status(200).json({
       success: true,

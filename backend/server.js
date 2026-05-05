@@ -63,7 +63,7 @@ const connect = async () => {
     await mongoose.connect(dbURI);
     console.log("Connected to mongoDB");
   } catch (err) {
-    console.log("disconnected to mongoDB");
+    console.error("disconnected to mongoDB", err);
     throw err;
   }
 };

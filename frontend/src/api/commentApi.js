@@ -8,10 +8,9 @@ async function getComments(postId) {
       },
     });
     const data = await res.json();
-    console.log(data);
     return data;
   } catch (err) {
-    console.log("取得留言失敗", err.message);
+    console.error("取得留言失敗", err.message);
     return null;
   }
 }
@@ -28,10 +27,9 @@ async function createComment(postId, content) {
       body: JSON.stringify({ content }),
     });
     const data = await res.json();
-    console.log(data);
     return data;
   } catch (err) {
-    console.log("新增留言失敗", err.message);
+    console.error("新增留言失敗", err.message);
     return null;
   }
 }
@@ -46,10 +44,9 @@ async function deleteComment(commentId) {
       },
     });
     const data = await res.json();
-    console.log(data);
     return data;
   } catch (err) {
-    console.log("刪除留言失敗", err.message);
+    console.error("刪除留言失敗", err.message);
     return null;
   }
 }
