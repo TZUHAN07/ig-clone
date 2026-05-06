@@ -1,46 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Instagram-Clone</title>
-    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/main.css" />
     <link rel="stylesheet" href="../assets/css/sidebar.css" />
-    <link rel="stylesheet" href="../assets/css/profile.css">
-    <link rel="stylesheet" href="../assets/css/comment.css">
-</head>
-<body>
-    <div class="sidebar-container">
+    <link rel="stylesheet" href="../assets/css/profile.css" />
+    <link rel="stylesheet" href="../assets/css/comment.css" />
+  </head>
+  <body>
+    <div class="sidebar-container"></div>
+
+    <div class="profile-topbar" id="profile-topbar" style="display: none">
+      <span class="topbar-title"></span>
+      <button class="hamburger-btn" id="hamburger-btn">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+      <div class="hamburger-menu" id="hamburger-menu">
+        <button class="menu-item logout-item" id="menu-logout">Logout</button>
+      </div>
     </div>
+
     <main class="profile-container">
-        <div class="profile-header">
-            <img class="profile-avatar"/>
-            <div class="profile-info">
-            <span class="profile-username"></span>
-            <div class="profile-numbers">
+      <div class="profile-header">
+        <img class="profile-avatar" />
+        <div class="profile-info">
+          <span class="profile-username"></span>
+          <div class="profile-numbers">
+            <div class="profile-stat">
+              <strong class="stat-count"></strong>
+              <span class="stat-label">posts</span>
+            </div>
 
             <div class="profile-stat">
-                <strong class="stat-count"></strong>
-                <span class="stat-label">posts</span>
+              <strong class="stat-count"></strong>
+              <span class="stat-label">followers</span>
             </div>
 
             <div class="profile-stat">
-                <strong class="stat-count"></strong>
-                 <span class="stat-label">followers</span>
+              <strong class="stat-count"></strong>
+              <span class="stat-label">following</span>
             </div>
-        
-            <div class="profile-stat">
-                 <strong class="stat-count"></strong>
-                <span class="stat-label">following</span>
-            </div>
-
-            </div>
-            </div>
+          </div>
         </div>
-        <button class="click-btn" id="profile-btn"></button>
-        <div class="profile-list">
-           
-        </div>
+      </div>
+      <button class="click-btn" id="profile-btn"></button>
+      <div class="profile-list"></div>
     </main>
     <script src="../config.js"></script>
     <script src="../src/utils/storage.js"></script>
@@ -53,6 +71,5 @@
     <script src="../src/components/sidebar.js"></script>
     <script src="../src/components/commentModal.js"></script>
     <script src="../src/page/profile.js"></script>
-    
-</body>
+  </body>
 </html>

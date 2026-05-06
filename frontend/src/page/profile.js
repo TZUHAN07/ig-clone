@@ -1,4 +1,4 @@
-let currentUser = null; 
+let currentUser = null;
 const profileContainer = document.querySelector(".profile-container");
 requireAuth();
 
@@ -7,6 +7,12 @@ document.addEventListener("sidebarLoaded", async () => {
   const profileId = urlParams.get("id");
 
   const me = await getMe();
+
+  if (!me || !me.data) {
+    console.error("Failed to fetch current user (possibly rate limited).");
+    window.location.href = "login.html";
+    return;
+  }
   const myId = me.data._id;
   currentUser = me.data;
 
@@ -49,6 +55,32 @@ document.addEventListener("sidebarLoaded", async () => {
     // 只有自己的 profile 才能換頭貼
     avatarEl.classList.add("avatar-editable");
     avatarEl.addEventListener("click", () => openAvatarModal());
+
+    const topbar = document.getElementById("profile-topbar");
+    const topbarTitle = topbar.querySelector(".topbar-title");
+    if (topbar) {
+      topbar.style.display = window.innerWidth <= 768 ? "flex" : "none";
+      topbarTitle.textContent = user.username;
+    }
+
+    // 漢堡選單
+    const hamburgerBtn = document.getElementById("hamburger-btn");
+    const hamburgerMenu = document.getElementById("hamburger-menu");
+    const menuLogout = document.getElementById("menu-logout");
+
+    hamburgerBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      hamburgerMenu.classList.toggle("open");
+    });
+
+    document.addEventListener("click", () => {
+      hamburgerMenu.classList.remove("open");
+    });
+
+    menuLogout.addEventListener("click", () => {
+      removeToken();
+      window.location.href = "login.html";
+    });
   } else {
     let isFollowing = user.followers.some(
       (id) => id === myId || id.toString() === myId,
