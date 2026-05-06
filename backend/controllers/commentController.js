@@ -82,11 +82,9 @@ const getComments = async (req, res) => {
 const deleteComment = async (req, res) => {
   const commentId = req.params.commentId;
   const userId = req.user._id;
-  console.log(commentId, userId);
 
   try {
     const comment = await Comment.findById(commentId);
-    console.log(comment);
     if (!comment) {
       return res.status(404).json({
         success: false,

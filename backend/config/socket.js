@@ -15,7 +15,6 @@ const initSocket = (server) => {
 
     socket.on("join", (userId) => {
       socket.join(userId);
-      console.log(`userId ${userId} joined room`);
     });
 
     socket.on("disconnect", () => {

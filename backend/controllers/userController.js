@@ -48,7 +48,6 @@ const updateUser = async (req, res) => {
 
       if (oldImageUrl) {
         deleteImageFromS3(oldImageUrl);
-        console.log("已刪除就圖片");
       }
     }
 

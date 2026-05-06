@@ -4,7 +4,6 @@ const {getIO} = require("../config/socket");
 const followUser = async (req, res) => {
   const targetId = req.params.id;
   const myId = req.user._id;
-  console.log(targetId, myId);
 
   try {
     if (targetId === myId.toString()) {

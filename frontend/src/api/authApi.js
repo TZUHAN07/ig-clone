@@ -25,10 +25,11 @@ const loginApi = async function login(email, password) {
         window.location.href = "index.html";
       }, 1500);
     } else {
-      alert(data.message);
+      message.innerText = data.message;
     }
   } catch (err) {
     message.innerText = "登入失敗";
+    console.error("登入錯誤", err);
   }
 };
 
@@ -46,7 +47,6 @@ const registerApi = async function register(username, email, password) {
       }),
     });
     const data = await res.json();
-    console.log(data);
 
     if (data.success) {
       message.innerText = "註冊成功！正在為您跳轉...";
@@ -56,9 +56,10 @@ const registerApi = async function register(username, email, password) {
         window.location.href = "login.html";
       }, 1500);
     } else {
-      message.innerText = "伺服器連線失敗";
+      message.innerText = data.message;
     }
   } catch (err) {
-    console.log("註冊錯誤", err);
+    message.innerText = "註冊失敗，請稍後再試";
+    console.error("註冊錯誤", err);
   }
 };
