@@ -19,7 +19,7 @@ const {
   getFollowing,
 } = require("../controllers/followController");
 
-router.get("/", getAllUsers);
+router.get("/", authMiddleware, getAllUsers);
 router.get("/search", authMiddleware, searchUsers);
 router.get("/me", authMiddleware, getMe);
 router.get("/:id", getUser);
