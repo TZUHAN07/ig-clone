@@ -92,15 +92,4 @@ document.addEventListener("sidebarLoaded", (e) => {
     });
   }
 
-  shareBtn.addEventListener("click", async () => {
-    const formData = getFormData();
-    if (!formData) return;
-
-    const data = await createPost(formData);
-
-    if (data && data.success) {
-      modal.classList.add("hidden");
-      resetModal();
-    }
-  });
 });

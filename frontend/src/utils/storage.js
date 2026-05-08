@@ -23,3 +23,18 @@ const redirectIfLoggedIn = () => {
     window.location.href = "index.html";
   }
 };
+
+let _cachedMe = null;
+
+const getCachedMe = async () => {
+  if (_cachedMe) return _cachedMe; 
+  const res = await getMe(); 
+  if (res && res.data) {
+    _cachedMe = res;
+  }
+  return _cachedMe;
+};
+
+const clearCachedMe = () => {
+  _cachedMe = null; 
+};

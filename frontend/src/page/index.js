@@ -75,7 +75,10 @@ const observer = new IntersectionObserver(
 );
 
 const loadSuggestions = async (meInfo) => {
+  if (!meInfo) return;
+
   const users = await getAllUsers();
+  if (!users || !users.data) return;
 
   const allUsers = users.data;
 
@@ -103,25 +106,15 @@ const loadSuggestions = async (meInfo) => {
 };
 
 document.addEventListener("sidebarLoaded", async (e) => {
-  const { resetModal, getFormData } = e.detail;
+  const { resetModal, getFormData, currentUser } = e.detail;
   const shareBtn = document.getElementById("share-btn");
 
-  const me = await getMe();
-  currentUser = me?.data || null;
-
   loadPosts();
-  loadSuggestions(currentUser);
+  if (currentUser) loadSuggestions(currentUser);
+});
 
-  shareBtn.addEventListener("click", async () => {
-    const formData = getFormData();
-    if (!formData) return;
-
-    const data = await createPost(formData);
-
-    if (data && data.success) {
-      modal.classList.add("hidden");
-      resetModal();
-      loadPosts();
-    }
-  });
+document.addEventListener("postCreated", (e) => {
+  currentPage = 1;
+  hasMore = true;
+  loadPosts(1);
 });

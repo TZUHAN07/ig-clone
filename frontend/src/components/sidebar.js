@@ -115,11 +115,11 @@ function loadSidebar() {
   loadModal();
   loadLogout();
   // 使用 setTimeout 確保 DOM 已載入完成後再 dispatch event
-  loadProfile().finally(() => {
+  loadProfile().then((userData) => {
     setTimeout(() => {
       document.dispatchEvent(
         new CustomEvent("sidebarLoaded", {
-          detail: { resetModal, getFormData },
+          detail: { resetModal, getFormData, currentUser: userData },
         }),
       );
     }, 0);
@@ -133,37 +133,42 @@ function loadModal() {
 
   modal.innerHTML = `
      <div class="create-post">
-          <div class="new-post-header">
-            <span class="header-text">Create new post</span>
-            <button class="close-btn" id="close-modal">✕</button>
-          </div>
-
-          <div class="post-body">
-            <div class="post-image-area">
-              <img id="image-preview" src="" alt="" class="hidden" />
-              <label for="image-input" class="upload-label">
-                <span>Select from computer</span>
-              </label>
-              <input
-                type="file"
-                id="image-input"
-                accept="image/*"
-                class="hidden"
-              />
-            </div>
-
-            <div class="post-info">
-              <textarea
-                id="post-caption"
-                placeholder="say something..."
-              ></textarea>
-            </div>
-          </div>
-
-          <div class="new-post-footer">
-            <button class="share-btn" id="share-btn">Share</button>
-          </div>
+          <div class="modal-step" id="step-1">
+        <div class="new-post-header">
+          <button class="close-btn" id="close-modal">✕</button>
+          <span class="header-text">New Post</span>
+          <span class="next-btn" id="next-btn" data-disabled="true">Next</span>
         </div>
+
+        <div class="post-image-area">
+          <img id="image-preview" src="" alt="" class="hidden" />
+          <label for="image-input" class="upload-label">
+            <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="currentColor">
+              <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+            </svg>
+            <span>Select photo</span>
+          </label>
+          <input type="file" id="image-input" accept="image/*"  class="hidden"/>
+        </div>
+      </div>
+
+        <div class="modal-step hidden" id="step-2">
+        <div class="new-post-header">
+          <button class="back-btn" id="back-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+              <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+            </svg>
+          </button>
+          <span class="header-text">New Post</span>
+          <button class="share-btn" id="share-btn">Share</button>
+        </div>
+
+        <div class="step2-body">
+          <img id="image-thumbnail" src="" alt="" />
+          <textarea id="post-caption" placeholder="Add a caption..."></textarea>
+        </div>
+      </div>
+    </div>
   `;
 
   document.body.appendChild(modal);
@@ -171,9 +176,25 @@ function loadModal() {
   // modal 插入後才選取元素，這時 DOM 已存在
   const createBtn = document.querySelector(".create-btn");
   const closeBtn = document.getElementById("close-modal");
-  const imagePreview = document.getElementById("image-preview");
+  const nextBtn = document.getElementById("next-btn");
+  const backBtn = document.getElementById("back-btn");
   const imageInput = document.getElementById("image-input");
+  const imagePreview = document.getElementById("image-preview");
+  const imageThumbnail = document.getElementById("image-thumbnail");
   const uploadLabel = document.querySelector(".upload-label");
+  const step1 = document.getElementById("step-1");
+  const step2 = document.getElementById("step-2");
+  const shareBtn = document.getElementById("share-btn");
+
+  const goToStep2 = () => {
+    step1.classList.add("hidden");
+    step2.classList.remove("hidden");
+  };
+
+  const goToStep1 = () => {
+    step2.classList.add("hidden");
+    step1.classList.remove("hidden");
+  };
 
   createBtn.addEventListener("click", () => {
     modal.classList.remove("hidden");
@@ -184,29 +205,84 @@ function loadModal() {
     resetModal();
   });
 
+  nextBtn.addEventListener("click", () => {
+    if (nextBtn.dataset.disabled === "true") return;
+    goToStep2();
+  });
+
+  backBtn.addEventListener("click", () => {
+    goToStep1();
+  });
+
   imageInput.addEventListener("change", () => {
     if (!imageInput.files[0]) return;
-    imagePreview.src = URL.createObjectURL(imageInput.files[0]);
+    const url = URL.createObjectURL(imageInput.files[0]);
+    imagePreview.src = url;
+    imageThumbnail.src = url;
     imagePreview.classList.remove("hidden");
     uploadLabel.classList.add("hidden");
+    nextBtn.dataset.disabled = "false";
   });
 
   imagePreview.addEventListener("click", () => {
     imageInput.click();
+  });
+
+  const bottomCreateBtn = document.querySelector(".bottom-create-btn");
+  if (bottomCreateBtn) {
+    bottomCreateBtn.addEventListener("click", () => {
+      modal.classList.remove("hidden");
+    });
+  }
+
+  shareBtn.addEventListener("click", async () => {
+    if (shareBtn.disabled) return;
+
+    const formData = getFormData();
+    if (!formData) return;
+
+    shareBtn.disabled = true;
+    shareBtn.textContent = "Sharing...";
+
+    const res = await createPost(formData);
+
+    if (res && res.success) {
+      modal.classList.add("hidden");
+      resetModal();
+
+      document.dispatchEvent(
+        new CustomEvent("postCreated", { detail: res.data }),
+      );
+    } else {
+      shareBtn.disabled = false;
+      shareBtn.textContent = "Share";
+    }
   });
 }
 
 const resetModal = () => {
   const imageInput = document.getElementById("image-input");
   const imagePreview = document.getElementById("image-preview");
+  const imageThumbnail = document.getElementById("image-thumbnail");
   const uploadLabel = document.querySelector(".upload-label");
   const postCaption = document.getElementById("post-caption");
+  const nextBtn = document.getElementById("next-btn");
+  const step1 = document.getElementById("step-1");
+  const step2 = document.getElementById("step-2");
+  const shareBtn = document.getElementById("share-btn");
 
   imageInput.value = "";
   imagePreview.src = "";
+  imageThumbnail.src = "";
   imagePreview.classList.add("hidden");
   uploadLabel.classList.remove("hidden");
   postCaption.value = "";
+  nextBtn.dataset.disabled = "true";;
+  nextBtn.classList.remove("active");
+  step1.classList.remove("hidden");
+  step2.classList.add("hidden");
+  shareBtn.disabled = false;
+  shareBtn.textContent = "Share";
 };
 
 function getFormData() {
@@ -249,16 +325,18 @@ const loadProfile = async () => {
   const profile = document.querySelector(".profile");
   if (!profile) return;
 
-  const user = await getMe();
+  const user = await getCachedMe();
   if (!user || !user.data) return;
 
   const avatar = createProfileAvatar(user.data);
   profile.appendChild(avatar);
+  return user.data;
 };
 
 const loadLogout = () => {
   const logout = document.querySelector(".logout-btn");
   logout.addEventListener("click", () => {
+    clearCachedMe();
     removeToken();
     window.location.href = "login.html";
   });
@@ -418,7 +496,7 @@ async function loadBottomProfile(bottomNav) {
   const profileLink = bottomNav.querySelector(".bottom-profile");
   if (!profileLink) return;
 
-  const user = await getMe();
+  const user = await getCachedMe();
   if (user && user.data) {
     profileLink.innerHTML = `<img src="${user.data.avatar}" alt="${user.data.username}" />`;
   } else {

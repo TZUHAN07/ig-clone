@@ -6,7 +6,7 @@ document.addEventListener("sidebarLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const profileId = urlParams.get("id");
 
-  const me = await getMe();
+  const me =  await getCachedMe();
 
   if (!me || !me.data) {
     console.error("Failed to fetch current user (possibly rate limited).");
@@ -23,6 +23,11 @@ document.addEventListener("sidebarLoaded", async () => {
     getUser(targetId),
     getUserPosts(targetId),
   ]);
+
+  if (!userRes || !userRes.data || !postsRes || !postsRes.data) {
+    console.error("Failed to load profile data");
+    return;
+  }
 
   const user = userRes.data;
   const posts = postsRes.data;
@@ -167,4 +172,8 @@ document.addEventListener("sidebarLoaded", async () => {
       }
     });
   }
+
+  document.addEventListener("postCreated", () => {
+    location.reload(); // 或重新載入該用戶貼文
+  });
 });

@@ -12,7 +12,7 @@
   display: none;
 }
 
-.close-btn {
+.comment-section .close-btn {
   position: fixed;
   top: 20px;
   right: 24px;
@@ -26,7 +26,7 @@
   line-height: 1;
 }
 
-.close-btn:hover {
+.comment-section.close-btn:hover {
   opacity: 0.7;
 }
 
