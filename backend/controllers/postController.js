@@ -197,23 +197,35 @@ const deletePosts = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
   const userId = req.user._id;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const skip = (page - 1) * limit;
 
   try {
     const me = await User.findById(userId).select("following");
+    let query = { user: { $nin: [...me.following, userId] } };
 
-    const posts = await Post.find({
-      user: { $nin: [...me.following, userId] },
-    })
+    const totalCount = await Post.countDocuments(query);
+
+    const posts = await Post.find(query)
       .populate({
         path: "user",
         select: "username avatar",
       })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     res.status(200).json({
       success: true,
       message: "取得所有貼文成功",
       data: posts,
+      pagination: {
+        total: totalCount,
+        page,
+        totalPages: Math.ceil(totalCount / limit),
+        hasMore: page * limit < totalCount,
+      },  
     });
   } catch (err) {
     res.status(500).json({
