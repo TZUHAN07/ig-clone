@@ -225,7 +225,7 @@ const getAllPosts = async (req, res) => {
         page,
         totalPages: Math.ceil(totalCount / limit),
         hasMore: page * limit < totalCount,
-      },  
+      },
     });
   } catch (err) {
     res.status(500).json({
@@ -285,18 +285,34 @@ const getFollowingPosts = async (req, res) => {
 
 const getUserPosts = async (req, res) => {
   const { id } = req.params;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const skip = (page - 1) * limit;
+
   try {
-    const posts = await Post.find({ user: id })
+    let query = { user: id };
+
+    const totalCount = await Post.countDocuments(query);
+
+    const posts = await Post.find(query)
       .populate({
         path: "user",
         select: "username avatar",
       })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     res.status(200).json({
       success: true,
       message: "取得使用者貼文成功",
       data: posts,
+      pagination: {
+        total: totalCount,
+        page,
+        totalPages: Math.ceil(totalCount / limit),
+        hasMore: page * limit < totalCount,
+      },
     });
   } catch (err) {
     res.status(500).json({
