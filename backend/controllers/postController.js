@@ -3,55 +3,43 @@ const User = require("../models/userModel");
 const { uploadToS3, deleteImageFromS3 } = require("../config/s3");
 const { resizeImage } = require("../config/imageService");
 const { File } = require("buffer");
+const { asyncHandler, AppError } = require("../middleware/errorHandler");
 
-const createPosts = async (req, res) => {
+const createPosts = asyncHandler(async (req, res) => {
   const { content } = req.body;
   const userId = req.user._id;
 
-  try {
-    if (!content || content.trim() === "") {
-      return res.status(400).json({
-        success: false,
-        message: "文字內容不能為空",
-      });
-    }
-
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "請上傳圖片檔案",
-      });
-    }
-
-    const resizedBuffer = await resizeImage(req.file.buffer);
-    req.file.buffer = resizedBuffer;
-    const uploadedImage = await uploadToS3(req.file, "posts");
-
-    const newPost = new Post({
-      user: userId,
-      content,
-      image: uploadedImage,
-    });
-
-    const savedPost = await newPost.save();
-
-    const populatedPost = await Post.findById(savedPost._id).populate({
-      path: "user",
-      select: "username avatar",
-    });
-
-    res.status(201).json({
-      success: true,
-      message: "發文成功",
-      data: populatedPost,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+  if (!content || content.trim() === "") {
+    throw new AppError("文字內容不能為空", 400);
   }
-};
+
+  if (!req.file) {
+    throw new AppError("請上傳圖片檔案", 400);
+  }
+
+  const resizedBuffer = await resizeImage(req.file.buffer);
+  req.file.buffer = resizedBuffer;
+  const uploadedImage = await uploadToS3(req.file, "posts");
+
+  const newPost = new Post({
+    user: userId,
+    content,
+    image: uploadedImage,
+  });
+
+  const savedPost = await newPost.save();
+
+  const populatedPost = await Post.findById(savedPost._id).populate({
+    path: "user",
+    select: "username avatar",
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "發文成功",
+    data: populatedPost,
+  });
+});
 
 const getPosts = async (req, res) => {
   const { id } = req.params;
