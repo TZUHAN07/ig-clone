@@ -6,6 +6,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { initSocket } = require("./config/socket");
 const { apiLimiter } = require("./middleware/rateLimiters");
+const {errorHandler} = require("./middleware/errorHandler");
 
 const postRoute = require("./routes/postRoutes");
 const authRoute = require("./routes/authRoutes");
@@ -23,6 +24,8 @@ app.use("/users", apiLimiter);
 app.use("/posts", postRoute);
 app.use("/", authRoute);
 app.use("/users", userRoute);
+
+app.use(errorHandler);
 
 const server = http.createServer(app);
 initSocket(server);
