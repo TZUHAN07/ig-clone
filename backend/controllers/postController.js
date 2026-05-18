@@ -144,8 +144,8 @@ const deletePosts = asyncHandler(async (req, res) => {
 
 const getAllPosts = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 5;
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 5));
   const skip = (page - 1) * limit;
 
   const me = await User.findById(userId).select("following");
@@ -177,8 +177,8 @@ const getAllPosts = asyncHandler(async (req, res) => {
 
 const getFollowingPosts = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 5;
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 5));
   const skip = (page - 1) * limit;
 
   const me = await User.findById(userId).select("following");
@@ -218,8 +218,8 @@ const getFollowingPosts = asyncHandler(async (req, res) => {
 
 const getUserPosts = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 5;
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 5));
   const skip = (page - 1) * limit;
 
   const query = { user: id };
