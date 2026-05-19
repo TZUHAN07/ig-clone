@@ -57,7 +57,7 @@ const login = asyncHandler(async (req, res) => {
   if (!email || !password) {
     throw new AppError("請提供所有必填欄位", 400);
   }
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
     throw new AppError("找不到此使用者", 400);
