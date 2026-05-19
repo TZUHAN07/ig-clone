@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const mediaSchema = new mongoose.Schema(
+  {
+    url: {
+      type: String,
+      required: [true, "媒體 URL 是必填的"],
+    },
+    type: {
+      type: String,
+      enum: ["image", "video"],
+      default: "image",
+    },
+  },
+  { _id: false },
+);
+
 const postSchema = new mongoose.Schema(
   {
     user: {
@@ -11,9 +26,13 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: [true, "文字內容是必填的"],
     },
-    image: {
-      type: String,
+    media: {
+      type: [mediaSchema],
       required: [true, "圖片是必填的"],
+             validate: [
+        (arr) => arr.length >= 1 && arr.length <= 10,
+        "媒體數量需介於 1-10 張",
+      ],
     },
     likes: [
       {

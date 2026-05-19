@@ -28,8 +28,8 @@ router.get("/", authMiddleware, getAllPosts);
 router.get("/following", authMiddleware, getFollowingPosts);
 router.get("/user/:id", authMiddleware, getUserPosts);
 router.get("/:id", authMiddleware, getPosts);
-router.post("/", authMiddleware, upload.single("image"), createPosts);
-router.put("/:id", authMiddleware, upload.single("image"), updatePosts);
+router.post("/", authMiddleware, upload.array("media", 10), createPosts);
+router.put("/:id", authMiddleware, updatePosts);
 
 router.post("/:id/like", authMiddleware, likePost);
 router.delete("/:id/like", authMiddleware, unlikePost);

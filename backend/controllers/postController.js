@@ -13,18 +13,23 @@ const createPosts = asyncHandler(async (req, res) => {
     throw new AppError("文字內容不能為空", 400);
   }
 
-  if (!req.file) {
-    throw new AppError("請上傳圖片檔案", 400);
+  if (!req.files || req.files.length === 0) {
+    throw new AppError("請上傳至少一張圖片檔案", 400);
   }
 
-  const resizedBuffer = await resizeImage(req.file.buffer);
-  req.file.buffer = resizedBuffer;
-  const uploadedImage = await uploadToS3(req.file, "posts");
+  const media = await Promise.all(
+    req.files.map(async (file) => {
+      const resizedBuffer = await resizeImage(file.buffer);
+      file.buffer = resizedBuffer;
+      const uploadedUrl = await uploadToS3(file, "posts");
+      return { url: uploadedUrl, type: "image" };
+    }),
+  );
 
   const newPost = new Post({
     user: userId,
     content,
-    image: uploadedImage,
+    media,
   });
 
   const savedPost = await newPost.save();
@@ -84,26 +89,12 @@ const updatePosts = asyncHandler(async (req, res) => {
     updateData.content = content;
   }
 
-  let oldImageUrl;
-
-  if (req.file) {
-    oldImageUrl = post.image;
-
-    const resizedBuffer = await resizeImage(req.file.buffer);
-    req.file.buffer = resizedBuffer;
-    const updatePostImage = await uploadToS3(req.file, "posts");
-    updateData.image = updatePostImage;
-  }
-
-  if (oldImageUrl) {
-    deleteImageFromS3(oldImageUrl);
-  }
-
+  
   if (Object.keys(updateData).length === 0) {
     throw new AppError("請提供要更新的內容", 400);
   }
 
-  const updatePost = await Post.findByIdAndUpdate(id, updateData, {
+  const updatedPost = await Post.findByIdAndUpdate(id, updateData, {
     new: true,
   }).populate({
     path: "user",
@@ -113,7 +104,7 @@ const updatePosts = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "貼文已更新",
-    data: updatePost,
+    data: updatedPost,
   });
 });
 
@@ -130,9 +121,9 @@ const deletePosts = asyncHandler(async (req, res) => {
     throw new AppError("您無權刪除此貼文", 403);
   }
 
-  if (post.image) {
-    await deleteImageFromS3(post.image);
-  }
+  if (post.media && post.media.length > 0) {
+  await Promise.all(post.media.map((m) => deleteImageFromS3(m.url)));
+}
 
   await Post.findByIdAndDelete(id);
 
