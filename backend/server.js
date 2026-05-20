@@ -6,11 +6,12 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { initSocket } = require("./config/socket");
 const { apiLimiter } = require("./middleware/rateLimiters");
-const {errorHandler} = require("./middleware/errorHandler");
+const { errorHandler } = require("./middleware/errorHandler");
 
 const postRoute = require("./routes/postRoutes");
 const authRoute = require("./routes/authRoutes");
 const userRoute = require("./routes/userRoutes");
+const messageRoute = require("./routes/messageRoutes");
 
 const app = express();
 
@@ -18,12 +19,10 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
-app.use("/posts", apiLimiter);
-app.use("/users", apiLimiter);
-
-app.use("/posts", postRoute);
+app.use("/posts", apiLimiter, postRoute);
 app.use("/", authRoute);
-app.use("/users", userRoute);
+app.use("/users", apiLimiter, userRoute);
+app.use("/messages", apiLimiter, messageRoute);
 
 app.use(errorHandler);
 
