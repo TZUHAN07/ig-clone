@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat|Instagram-Clone</title>
+    <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="stylesheet" href="../assets/css/sidebar.css" />
+    <link rel="stylesheet" href="../assets/css/chat.css" />
+  </head>
+ <body>
+  <div class="sidebar-container"></div>
+
+  <main class="chat-container">
+    <aside class="conversation-list">
+      <h2></h2>
+      <ul id="conversation-list">
+        <li class="empty">載入中...</li>
+      </ul>
+    </aside>
+
+    <section class="message-area">
+      <header id="chat-header" class="hidden">
+        <img id="chat-avatar" src="" alt="" />
+        <span id="chat-username"></span>
+      </header>
+
+      <div id="message-list" class="message-list">
+        <p class="empty-hint">Send a message to start a chat.</p>
+      </div>
+
+      <form id="message-form" class="hidden">
+        <input
+          type="text"
+          id="message-input"
+          placeholder="輸入訊息..."
+          maxlength="1000"
+          autocomplete="off"
+        />
+        <button type="submit">送出</button>
+      </form>
+    </section>
+  </main>
+ 
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="../config.js"></script>
+  <script src="../src/utils/storage.js"></script>
+  <script src="../src/utils/helpers.js"></script>
+  <script src="../src/api/avatarApi.js"></script>
+  <script src="../src/api/userApi.js"></script>
+  <script src="../src/api/chatApi.js"></script>
+  <script src="../src/components/sidebar.js"></script>
+  <script src="../src/page/chat.js"></script>
+
+</body>
+</html>
