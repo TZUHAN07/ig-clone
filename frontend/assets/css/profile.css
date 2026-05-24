@@ -75,8 +75,16 @@ main {
   color: var(--text-color);
 }
 
-.click-btn {
+.profile-actions {
+  display: flex;
+  gap: 8px;
   width: 100%;
+  max-width: 960px;
+  margin-bottom: 12px;
+}
+
+.click-btn {
+  flex: 1;
   border: none;
   padding: 10px 16px;
   border-radius: 8px;
@@ -87,8 +95,6 @@ main {
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-family: inherit;
-  align-self: flex-start;
-  margin-bottom: 12px;
 }
 
 .click-btn:hover {

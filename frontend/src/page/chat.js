@@ -42,12 +42,16 @@ const messageFormEl = document.getElementById("message-form");
 let currentMe = null;
 let currentChatUser = null;
 
+let cachedConversations = [];
+
 const loadConversations = async () => {
   const result = await getConversations();
   if (!result || !result.data) {
     conversationListEl.innerHTML = '<li class="empty">取得對話列表失敗</li>';
     return;
   }
+  cachedConversations = result.data;
+
   if (result.data.length === 0) {
     conversationListEl.innerHTML = '<li class="empty">還沒有對話</li>';
     return;
@@ -57,6 +61,24 @@ const loadConversations = async () => {
   result.data.forEach((chat) => {
     conversationListEl.appendChild(createConversationItem(chat));
   });
+};
+
+const openChatFromUrl = async () => {
+  const params = new URLSearchParams(window.location.search);
+  const targetUserId = params.get("userId");
+  if (!targetUserId) return;
+  if (currentMe && targetUserId === currentMe._id) return; 
+
+  const existing = cachedConversations.find((c) => c.user._id === targetUserId);
+  if (existing) {
+    selectConversation(existing.user);
+    return;
+  }
+
+  const userRes = await getUser(targetUserId);
+  if (userRes && userRes.data) {
+    selectConversation(userRes.data);
+  }
 };
 
 const createConversationItem = (chat) => {
@@ -144,4 +166,5 @@ const createMessageBubble = (msg) => {
 document.addEventListener("sidebarLoaded", async (e) => {
   currentMe = e.detail.currentUser;
   await loadConversations();
+  await openChatFromUrl();
 });

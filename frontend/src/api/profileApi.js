@@ -15,25 +15,4 @@ async function getUserPosts(userId) {
   }
 }
 
-async function getUser(userId) {
-  const token = getToken();
-  try {
-    const res = await fetch(`${API_BASE_URL}/users/${userId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("取得本人失敗", err.message);
-    return null;
-  }
-}
-
-
-
-
 
