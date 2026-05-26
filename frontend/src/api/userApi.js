@@ -1,3 +1,21 @@
+async function getUser(userId) {
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("取得用戶失敗", err.message);
+    return null;
+  }
+}
+
 // 取得所有用戶
 async function getAllUsers() {
   const token = getToken();

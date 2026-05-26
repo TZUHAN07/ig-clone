@@ -103,6 +103,14 @@ document.addEventListener("sidebarLoaded", async () => {
         isFollowing = true;
       }
     });
+
+    const messageBtn = document.createElement("button");
+    messageBtn.className = "click-btn message-btn";
+    messageBtn.textContent = "Message";
+    messageBtn.addEventListener("click", () => {
+      window.location.href = `chat.html?userId=${targetId}`;
+    });
+    profileBtn.insertAdjacentElement("afterend", messageBtn);
   }
 
   const profileList = document.querySelector(".profile-list");
