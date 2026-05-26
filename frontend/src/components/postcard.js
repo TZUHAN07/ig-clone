@@ -11,7 +11,7 @@ const createPostCard = (post) => {
       </div>
     </div>
  
-    <img class="post-image" src="${post.image}" alt="${post.user.username}"/>
+    <img class="post-image" src="${post.media[0].url}" alt="${post.user.username}"/>
     
     <div class="post-footer">
     <div class="post-actions">

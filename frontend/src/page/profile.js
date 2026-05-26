@@ -117,7 +117,7 @@ document.addEventListener("sidebarLoaded", async () => {
   profileList.innerHTML = "";
   posts.forEach((post) => {
     const img = document.createElement("img");
-    img.src = post.image;
+    img.src = post.media[0].url;
     img.alt = post.user.username;
     img.addEventListener("click", () => {
       openCommentModal(post);

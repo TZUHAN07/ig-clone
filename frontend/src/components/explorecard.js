@@ -3,7 +3,7 @@ const createExploreCard = (post) => {
   card.className = "explore-card";
 
   card.innerHTML = `
-        <img class="explore-image" src="${post.image}" alt="${post.user.username}"/>
+        <img class="explore-image" src="${post.media[0].url}" alt="${post.user.username}"/>
 
     `;
 
