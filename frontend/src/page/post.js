@@ -33,7 +33,7 @@ document.addEventListener("sidebarLoaded", async () => {
   });
 
   const imageEl = document.querySelector(".post-page-image");
-  imageEl.src = post.image;
+  imageEl.src =post.media[0].url;
 
   const avatarEl = document.querySelector(".post-page-avatar");
   const usernameEl = document.querySelector(".post-page-username");
