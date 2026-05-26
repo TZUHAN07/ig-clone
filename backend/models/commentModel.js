@@ -15,7 +15,6 @@ const commentSchema = new mongoose.Schema(
     content: {
       type: String,
       required: [true, "文字內容是必填的"],
-      trim: true,
     },
   },
   {

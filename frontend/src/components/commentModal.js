@@ -195,8 +195,8 @@ async function openCommentModal(post, onCommentAdded, onLikeChanged) {
   oldBtn.parentNode.replaceChild(newBtn, oldBtn);
 
   newBtn.addEventListener("click", async () => {
-    const content = commentInput.value.trim();
-    if (!content) return;
+    const content = commentInput.value;
+    if (!content.trim()) return;
 
     newBtn.disabled = true;
     const result = await createComment(post._id, content);

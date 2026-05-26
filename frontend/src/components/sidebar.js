@@ -308,7 +308,7 @@ function getFormData() {
   }
 
   const formData = new FormData();
-  formData.append("image", file);
+  formData.append("media", file);
   formData.append("content", caption);
 
   return formData;
