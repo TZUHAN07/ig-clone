@@ -137,7 +137,7 @@ async function openCommentModal(post, onCommentAdded, onLikeChanged) {
     commentInput.focus();
   });
 
-  image.src = post.image;
+  image.src = post.media[0].url;
   avatar.src = post.user.avatar;
   username.textContent = post.user.username;
   caption.innerHTML = `
