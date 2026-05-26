@@ -46,6 +46,15 @@ const EMPTY_STATE_HTML = `
 const appendMessage = (msg) => {
   const emptyEl = messageListEl.querySelector(".empty-state");
   if (emptyEl) emptyEl.remove();
+
+  const messages = messageListEl.querySelectorAll(".message");
+  const lastMsg = messages[messages.length - 1];
+  const newDate = new Date(msg.createdAt).toDateString();
+  
+  if (!lastMsg || newDate !== lastMsg.dataset.date) {
+    messageListEl.appendChild(createDateDivider(msg.createdAt));
+  }
+
   messageListEl.appendChild(createMessageBubble(msg));
   messageListEl.scrollTop = messageListEl.scrollHeight;
 };
@@ -85,7 +94,7 @@ const openChatFromUrl = async () => {
   const params = new URLSearchParams(window.location.search);
   const targetUserId = params.get("userId");
   if (!targetUserId) return;
-  if (currentMe && targetUserId === currentMe._id) return; 
+  if (currentMe && targetUserId === currentMe._id) return;
 
   const existing = cachedConversations.find((c) => c.user._id === targetUserId);
   if (existing) {
@@ -138,7 +147,6 @@ messageFormEl.addEventListener("submit", async (e) => {
       submitBtn.disabled = false;
     },
   );
- 
 });
 
 const selectConversation = async (user) => {
@@ -171,7 +179,12 @@ const loadMessages = async (userId) => {
   messageListEl.innerHTML = "";
 
   const messages = [...result.data].reverse();
-  messages.forEach((msg) => {
+  messages.forEach((msg, i) => {
+    const prev = messages[i - 1];
+
+    if (!prev || !isSameDay(prev.createdAt, msg.createdAt)) {
+      messageListEl.appendChild(createDateDivider(msg.createdAt));
+    }
     messageListEl.appendChild(createMessageBubble(msg));
   });
 
@@ -183,6 +196,17 @@ const createMessageBubble = (msg) => {
   const isMine = msg.sender._id === currentMe._id;
   div.className = `message ${isMine ? "mine" : "theirs"}`;
   div.textContent = msg.content;
+  div.dataset.time = formatClockTime(msg.createdAt);
+  div.dataset.date = new Date(msg.createdAt).toDateString();
+
+  return div;
+};
+
+const createDateDivider = (iso) => {
+  const div = document.createElement("div");
+  div.className = "date-divider";
+  div.textContent = formatDateDivider(iso);
+
   return div;
 };
 

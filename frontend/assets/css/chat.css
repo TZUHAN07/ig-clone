@@ -118,6 +118,7 @@
   border-radius: 20px;
   word-break: break-word;
   font-size: 14px;
+  position: relative;
 }
 
 .message.mine {
@@ -130,6 +131,38 @@
   align-self: flex-start;
   background: var(--gray-100);
   color: var(--text-color);
+}
+
+.message::before {
+  content: attr(data-time);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--secondary-text-color);
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.message.mine::before {
+  right: calc(100% + 8px);
+}
+
+.message.theirs::before {
+  left: calc(100% + 8px);
+}
+
+.message:hover::before {
+  opacity: 1;
+}
+
+.date-divider {
+  align-self: center;
+  font-size: 12px;
+  color: var(--secondary-text-color);
+  margin: 16px 0 8px;
 }
 
 .empty-hint {
