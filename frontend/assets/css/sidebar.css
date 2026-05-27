@@ -525,15 +525,16 @@
   font-size: 14px;
 }
 
-/* Mobile top nav — 只首頁顯示，桌面隱藏 */
 .mobile-top-nav {
   display: none;
 }
 
 @media (max-width: 768px) {
-  /* 只在頁面有 mobile-top-nav 時才加 padding-top（避開 fixed top nav） */
   body:has(.mobile-top-nav) {
     padding-top: 50px;
+  }
+  .create-post {
+    width: 90%;
   }
 
   .mobile-top-nav {
@@ -608,7 +609,6 @@
     padding-top: 12px;
   }
 
-  /* dropdown 為空時不顯示框 */
   .mobile-search-results:empty {
     display: none;
   }
