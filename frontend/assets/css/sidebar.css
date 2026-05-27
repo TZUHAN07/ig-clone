@@ -531,7 +531,8 @@
 }
 
 @media (max-width: 768px) {
-  body {
+  /* 只在頁面有 mobile-top-nav 時才加 padding-top（避開 fixed top nav） */
+  body:has(.mobile-top-nav) {
     padding-top: 50px;
   }
 

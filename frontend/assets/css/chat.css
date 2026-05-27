@@ -263,3 +263,43 @@
 .hidden {
   display: none;
 }
+
+.mobile-back-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .chat-container {
+    margin-left: 0;
+    height: calc(100vh - 50px);
+  }
+
+  .conversation-list {
+    width: 100%;
+    border-right: none;
+  }
+
+  .message-area {
+    display: none;
+  }
+
+  .chat-container.show-message .conversation-list {
+    display: none;
+  }
+
+  .chat-container.show-message .message-area {
+    display: flex;
+  }
+
+  .mobile-back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px 4px 0;
+    color: var(--text-color);
+    font-size: 24px;
+  }
+}
