@@ -130,7 +130,7 @@ body {
   }
 
   .explore-search-result:hover {
-    background-color: var(--input-color);
+    background-color: var(--hover-bg-color);
   }
 
   .explore-search-result img {
