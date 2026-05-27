@@ -65,6 +65,8 @@ const chatHeaderEl = document.getElementById("chat-header");
 const chatAvatarEl = document.getElementById("chat-avatar");
 const chatUsernameEl = document.getElementById("chat-username");
 const messageFormEl = document.getElementById("message-form");
+const chatContainerEl = document.querySelector(".chat-container");
+const mobileBackBtnEl = document.querySelector(".mobile-back-btn");
 
 let currentMe = null;
 let currentChatUser = null;
@@ -161,6 +163,8 @@ const selectConversation = async (user) => {
   chatHeaderEl.classList.remove("hidden");
   messageFormEl.classList.remove("hidden");
 
+  chatContainerEl.classList.add("show-message");
+
   await loadMessages(user._id);
 };
 
@@ -214,4 +218,9 @@ document.addEventListener("sidebarLoaded", async (e) => {
   currentMe = e.detail.currentUser;
   await loadConversations();
   await openChatFromUrl();
+});
+
+
+mobileBackBtnEl.addEventListener("click", () => {
+  chatContainerEl.classList.remove("show-message");
 });
