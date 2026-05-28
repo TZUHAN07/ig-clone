@@ -2,11 +2,11 @@
 
 > 全端 IG 仿作 — Socket.io 即時聊天 + S3 多圖上傳 + Docker 部署
 
-🌐 **Live Demo**：Coming soon（Zeabur 部署中） | [🎯 Technical Highlights](#-technical-highlights)
+🌐 **Live Demo**：[https://44.211.175.201/](https://44.211.175.201/)（AWS EC2 + Docker + nginx）
 
 ## 📸 Demo
 
-> EC2 部署 in progress，預計 2026/6/X 上線。先看截圖：
+> 部署於 AWS EC2 + Docker + nginx。GIF demo 錄製中。
 
 <!-- TODO: 補 4-6 張截圖：登入、首頁、發文、聊天室、profile、explore -->
 <!-- 建議：用 GIF 錄 1. 發文 2. 聊天 即時雙裝置 3. 追蹤 三個操作流程 -->
@@ -51,7 +51,7 @@
 
 ```bash
 # 1. clone repo
-git clone https://github.com/tzuhan1007/ig-clone.git
+git clone https://github.com/TZUHAN07/ig-clone.git
 cd ig-clone
 
 # 2. 設定環境變數
@@ -75,7 +75,8 @@ open http://localhost
 - Backend: `localhost:3000`
 - MongoDB: container 內部，host 不對外開
 
-## 🎯 Technical Highlights
+<details>
+<summary>🎯 <strong>Technical Highlights</strong>（點開看 5 大技術決策深 dive）</summary>
 
 ### 1. Mobile RWD：state class 切 view 模式 + CSS :has() 偽類
 
@@ -188,7 +189,10 @@ JWT 是 stateless，沒有「server 端 session 可清」的概念。「登出�
 
 **個人感想**：JWT stateless 在我這個 portfolio 場景 OK，但學了 4 種策略後知道 production scale 一定要 refresh token pair（短期 access + 長期 refresh）才能在「**安全 + UX + 不打爆 DB**」之間取平衡。這個 trade-off **是設計題不是技術題** — 沒有絕對好壞，看 use case。
 
-## 💎 Other Notable Patterns
+</details>
+
+<details>
+<summary>💎 <strong>Other Notable Patterns</strong>（點開看 4 個純 JS 設計小亮點）</summary>
 
 純 JS 無 framework 場景下，幾個用 raw API 達成「框架級設計」的小設計：
 
@@ -256,6 +260,8 @@ fetch(url, {
 
 **亮點**：知道為什麼這跟 `application/json` 不同 — boundary 是動態 token，手動寫死會 corrupt request body。
 
+</details>
+
 ## 📋 Roadmap
 
 ### 短期（in progress）
@@ -279,7 +285,7 @@ fetch(url, {
 **Tzu Han Chao**
 
 - 📧 Email: joannechao1007@gmail.com
-- 🐙 GitHub: [@tzuhan1007](https://github.com/tzuhan1007)
+- 🐙 GitHub: [@TZUHAN07](https://github.com/TZUHAN07)
 
 ## 📄 License
 
