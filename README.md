@@ -6,10 +6,14 @@
 
 ## 📸 Demo
 
-> 部署於 AWS EC2 + Docker + nginx。GIF demo 錄製中。
+### 即時聊天 + Mobile RWD（一個 GIF 三個亮點）
 
-<!-- TODO: 補 4-6 張截圖：登入、首頁、發文、聊天室、profile、explore -->
-<!-- 建議：用 GIF 錄 1. 發文 2. 聊天 即時雙裝置 3. 追蹤 三個操作流程 -->
+![chat demo](./assets/demo/chat-demo.gif)
+
+> Mobile viewport 雙視窗 demo，涵蓋 3 個技術點：
+> - **Socket.io 即時推送** — 一邊送 → 另一邊立刻收到，不用 refresh
+> - **多裝置同步** — 同一帳號多裝置即時更新
+> - **Mobile RWD 切 view 模式** — list ↔ message-area 切換，用 state class pattern + CSS `:has()` 實作
 
 | 首頁 | 聊天室 | Profile |
 |---|---|---|
