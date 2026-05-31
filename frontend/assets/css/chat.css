@@ -271,7 +271,7 @@
 @media (max-width: 768px) {
   .chat-container {
     margin-left: 0;
-    height: calc(100vh - 50px);
+    height: calc(100dvh - 50px);
   }
 
   .conversation-list {

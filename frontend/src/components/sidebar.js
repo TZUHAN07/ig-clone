@@ -167,7 +167,7 @@ function loadModal() {
             </svg>
           </button>
           <span class="header-text">New Post</span>
-          <button class="share-btn" id="share-btn">Share</button>
+          <button class="publish-btn" id="publish-btn">Share</button>
         </div>
 
         <div class="step2-body">
@@ -191,7 +191,7 @@ function loadModal() {
   const uploadLabel = document.querySelector(".upload-label");
   const step1 = document.getElementById("step-1");
   const step2 = document.getElementById("step-2");
-  const shareBtn = document.getElementById("share-btn");
+  const shareBtn = document.getElementById("publish-btn");
 
   const goToStep2 = () => {
     step1.classList.add("hidden");
@@ -276,7 +276,7 @@ const resetModal = () => {
   const nextBtn = document.getElementById("next-btn");
   const step1 = document.getElementById("step-1");
   const step2 = document.getElementById("step-2");
-  const shareBtn = document.getElementById("share-btn");
+  const shareBtn = document.getElementById("publish-btn");
 
   imageInput.value = "";
   imagePreview.src = "";

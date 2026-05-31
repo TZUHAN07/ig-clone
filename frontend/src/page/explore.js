@@ -21,7 +21,7 @@ const loadExplorePosts = async () => {
 
 document.addEventListener("sidebarLoaded", (e) => {
   const { resetModal, getFormData } = e.detail;
-  const shareBtn = document.getElementById("share-btn");
+  const shareBtn = document.getElementById("publish-btn");
   const modal = document.getElementById("create-modal");
   loadExplorePosts();
 

@@ -274,7 +274,7 @@
 }
 
 .next-btn,
-.share-btn {
+.publish-btn {
   grid-column: 3;
   justify-self: end;
   background: none;
@@ -290,7 +290,7 @@
   cursor: default;
 }
 
-.share-btn:hover {
+.publish-btn:hover {
   opacity: 0.7;
 }
 
