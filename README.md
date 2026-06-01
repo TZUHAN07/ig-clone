@@ -108,13 +108,50 @@ erDiagram
     }
 ```
 
-### Schema 設計亮點
+### Schema 
 
 - **User 密碼雙層保護**：`select: false` + `toJSON transform` 雙保險（單一防線會在 `findOne().select('+password')` 時失守）
 - **Follower / Following 對稱欄位**：用 `ObjectId` array 雙向儲存，方便 `$lookup` 跨集合 join
 - **Post.media sub-schema**：embed 而非另開 collection，因為 media 不會被獨立查詢（一定跟 post 一起）
 - **Message 雙端 ref**：sender + recipient 都 ref User，方便 aggregation 用 `$cond` 取「對話的另一個人」
 - **Post indexes**：`{user: 1, createdAt: -1}` 跟 `{createdAt: -1}` 加速個人 feed 跟首頁 feed 查詢
+
+## Scale Considerations
+
+### Followers / Likes 用 Array Reference 是 MVP Trade-off
+
+目前 `User.followers` 跟 `Post.likes` 用 `ObjectId[]` 存在 document 內：
+- **MVP 階段 OK**：每 user 追蹤者 < 1k、每 post 按讚 < 100
+- **這是 MongoDB 反 pattern**：unbounded growing array in document
+- **撞牆點**：每 user 追蹤者 > 10k 後 update 效能急速下降；> 1M 撞 16MB document 上限
+
+### Scaled 版本：拆 follows / likes collection
+
+未來上線真實量級（例如網紅有百萬追蹤者）會拆獨立 collection：
+
+```js
+// follows collection
+{
+  follower: ObjectId,   // 誰追蹤
+  following: ObjectId,  // 追蹤誰
+  createdAt: Date
+}
+
+// indexes:
+{ follower: 1, following: 1 } unique   // 防重複追蹤
+{ follower: 1, createdAt: -1 }         // 看我追蹤誰
+{ following: 1, createdAt: -1 }        // 看我的追蹤者
+```
+
+**好處**：
+- 無上限（千萬筆都行）
+- Update 效能好（單一 insert/delete vs 整個 user document 重寫）
+- 可加 metadata（`close_friend` / `mute_post` / `mute_story` 等）
+
+**遷移成本**：
+- 查詢要 `$lookup` join
+- 「user 是否追蹤 X」要額外 query follows collection
+
 
 ## Quick Start
 
@@ -154,6 +191,7 @@ open http://localhost
 - [ ] Domain + SSL（Let's Encrypt）
 
 ### 中期
+- [ ] **Schema scale refactor**：`User.followers` / `Post.likes` 從 array 拆獨立 collection（避免 16MB document 上限 + update 效能問題）
 - [ ] Cursor-based pagination（取代 skip/limit，避免大資料量效能下降）
 - [ ] TypeScript migration（API contract、避免再踩 schema mismatch）
 - [ ] CI/CD pipeline（GitHub Actions 自動測試 + 部署）
