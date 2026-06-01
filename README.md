@@ -2,7 +2,7 @@
 
 > 全端 IG 仿作 — Socket.io 即時聊天 + S3 多圖上傳 + Docker 部署
 
-🌐 **Live Demo**：[https://44.211.175.201/](https://44.211.175.201/)（AWS EC2 + Docker + nginx）
+🌐 **Live Demo**：[https://ig-clone.tzuhan.dev](https://ig-clone.tzuhan.dev)（AWS EC2 + Docker + nginx）
 
 ## Demo
 
