@@ -64,6 +64,7 @@ const messageListEl = document.getElementById("message-list");
 const chatHeaderEl = document.getElementById("chat-header");
 const chatAvatarEl = document.getElementById("chat-avatar");
 const chatUsernameEl = document.getElementById("chat-username");
+const chatUserLinkEl = document.getElementById("chat-user-link");
 const messageFormEl = document.getElementById("message-form");
 const chatContainerEl = document.querySelector(".chat-container");
 const mobileBackBtnEl = document.querySelector(".mobile-back-btn");
@@ -160,6 +161,7 @@ const selectConversation = async (user) => {
 
   chatAvatarEl.src = user.avatar;
   chatUsernameEl.textContent = user.username;
+  chatUserLinkEl.href = `profile.html?id=${user._id}`;
   chatHeaderEl.classList.remove("hidden");
   messageFormEl.classList.remove("hidden");
 
