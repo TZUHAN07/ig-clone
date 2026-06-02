@@ -1,6 +1,6 @@
 requireAuth();
 
-const SOCKET_URL = `${window.location.protocol}//${window.location.hostname}:3000`;
+const SOCKET_URL = window.location.origin;
 
 const socket = io(SOCKET_URL, {
   auth: { token: getToken() },
