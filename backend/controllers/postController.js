@@ -174,7 +174,7 @@ const getFollowingPosts = asyncHandler(async (req, res) => {
 
   const me = await User.findById(userId).select("following");
 
-  const query = { user: { $in: [...me.following] } };
+  const query = { user: { $in: [...me.following, userId] } };
 
   const followingCount = await Post.countDocuments(query);
 

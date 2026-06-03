@@ -5,6 +5,11 @@ function loadCommentModal() {
 
   modal.innerHTML = `
     <button class="close-btn" id="close-comment-modal">✕</button>
+
+     <div class="post-options-popover hidden">
+        <button class="post-delete-btn">Delete</button>
+        <button class="post-options-cancel">Cancel</button>
+     </div>
     
     <div class="comment-modal-content">
      <div class="top-bar hidden">
@@ -24,6 +29,7 @@ function loadCommentModal() {
             <div class="comment-modal-header">
                 <img class="comment-modal-avatar" src="" alt="" />
                 <span class="comment-modal-username"></span>
+                <button class="post-options-btn hidden" aria-label="More options">⋯</button>
             </div>
         
             <div class="comment-modal-body">
@@ -96,6 +102,75 @@ async function openCommentModal(post, onCommentAdded, onLikeChanged) {
   const isLikedInit = currentUser
     ? post.likes.some((id) => id.toString() === currentUser._id.toString())
     : false;
+
+  const isOwner = currentUser
+    ? currentUser._id.toString() === post.user._id.toString()
+    : false;
+
+  let optionsBtn = modal.querySelector(".post-options-btn");
+  const popover = modal.querySelector(".post-options-popover");
+  let deleteBtn = modal.querySelector(".post-delete-btn");
+  let cancelBtn = modal.querySelector(".post-options-cancel");
+
+  const newOptionsBtn = optionsBtn.cloneNode(true);
+  optionsBtn.parentNode.replaceChild(newOptionsBtn, optionsBtn);
+  optionsBtn = newOptionsBtn;
+
+  const newDeleteBtn = deleteBtn.cloneNode(true);
+  deleteBtn.parentNode.replaceChild(newDeleteBtn, deleteBtn);
+  deleteBtn = newDeleteBtn;
+
+  const newCancelBtn = cancelBtn.cloneNode(true);
+  cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+  cancelBtn = newCancelBtn;
+
+  optionsBtn.classList.toggle("hidden", !isOwner);
+
+  optionsBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    popover.classList.remove("hidden");
+  });
+
+  cancelBtn.addEventListener("click", () => {
+    popover.classList.add("hidden");
+  });
+
+  if (modal._closePopoverOutside) {
+    document.removeEventListener("click", modal._closePopoverOutside);
+  }
+  modal._closePopoverOutside = (e) => {
+    if (popover.classList.contains("hidden")) return;
+    if (popover.contains(e.target) || optionsBtn.contains(e.target)) return;
+    popover.classList.add("hidden");
+  };
+  document.addEventListener("click", modal._closePopoverOutside);
+
+  deleteBtn.addEventListener("click", async () => {
+    const ok = window.confirm("確定要刪除這則貼文嗎？");
+    if (!ok) return;
+
+    deleteBtn.disabled = true;
+
+    try {
+      const result = await deletePost(post._id);
+      if (result && result.success) {
+        document.dispatchEvent(
+          new CustomEvent("postDeleted", { detail: { postId: post._id } }),
+        );
+        popover.classList.add("hidden");
+        modal.classList.add("hidden");
+      } else {
+        alert("刪除失敗，請稍後再試");
+
+        deleteBtn.disabled = false;
+      }
+    } catch (error) {
+      console.error("刪除時發生錯誤:", error);
+      alert("網路錯誤，無法刪除");
+      deleteBtn.disabled = false;
+      deleteBtn.textContent = "Delete";
+    }
+  });
 
   modalLike.classList.toggle("liked", isLikedInit);
   modalLike.dataset.loading = "false";
@@ -242,19 +317,15 @@ async function openCommentModal(post, onCommentAdded, onLikeChanged) {
 
     topBar.classList.remove("hidden");
     closeBtn.style.display = "none";
-    modalHeader.style.display = "none";
-    captionArea.style.display = "none";
     modalFooter.style.display = "none";
 
     const backBtn = modal.querySelector(".top-back");
     const newBackBtn = backBtn.cloneNode(true);
     backBtn.parentNode.replaceChild(newBackBtn, backBtn);
+
     newBackBtn.addEventListener("click", () => {
-      // 恢復桌面版狀態
       topBar.classList.add("hidden");
       closeBtn.style.display = "";
-      modalHeader.style.display = "";
-      captionArea.style.display = "";
       modalFooter.style.display = "";
       modal.classList.add("hidden");
     });

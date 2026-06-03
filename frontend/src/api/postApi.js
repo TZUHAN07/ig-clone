@@ -1,3 +1,5 @@
+
+
 const { API_BASE_URL } = config;
 async function getFollowingPosts(page = 1) {
   const token = getToken();
@@ -89,6 +91,24 @@ async function getPost(postId) {
     return data;
   } catch (err) {
     console.error("取得貼文失敗", err.message);
+    return null;
+  }
+}
+
+async function deletePost(postId) {
+  const token = getToken();
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("刪除貼文失敗", err.message);
     return null;
   }
 }

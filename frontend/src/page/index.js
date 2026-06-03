@@ -106,7 +106,8 @@ const loadSuggestions = async (meInfo) => {
 };
 
 document.addEventListener("sidebarLoaded", async (e) => {
-  const { resetModal, getFormData, currentUser } = e.detail;
+  const { resetModal, getFormData } = e.detail;
+  currentUser = e.detail.currentUser;
   const shareBtn = document.getElementById("publish-btn");
 
   loadPosts();
@@ -117,4 +118,12 @@ document.addEventListener("postCreated", (e) => {
   currentPage = 1;
   hasMore = true;
   loadPosts(1);
+});
+
+document.addEventListener("postDeleted", (e) => {
+  const postId = e.detail.postId;
+  const cardToRemove = document.querySelector(`[data-post-id="${postId}"]`);
+  if (cardToRemove) {
+    cardToRemove.remove();
+  }
 });

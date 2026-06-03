@@ -12,7 +12,7 @@
   display: none;
 }
 
-.comment-section .close-btn {
+#comment-modal .close-btn {
   position: fixed;
   top: 20px;
   right: 24px;
@@ -21,12 +21,12 @@
   color: var(--base-color);
   font-size: 24px;
   cursor: pointer;
-  z-index: 10;
+  z-index: 1001;
   padding: 4px 8px;
   line-height: 1;
 }
 
-.comment-section.close-btn:hover {
+#comment-modal .close-btn:hover {
   opacity: 0.7;
 }
 
@@ -340,4 +340,61 @@
   #close-comment-modal {
     display: none;
   }
+}
+
+
+.post-options-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  padding: 4px 8px;
+  margin-left: auto;        /* push 到 header 右側 */
+  color: var(--text-color);
+}
+
+.post-options-btn:hover {
+  opacity: 0.6;
+}
+
+.post-options-popover {
+  position: fixed;         
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--base-color);
+  border-radius: 12px;
+  min-width: 260px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 1000;           
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-options-popover button {
+  background: transparent;
+  border: none;
+  padding: 14px;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line-color);
+  width: 100%;
+}
+
+.post-options-popover button:last-child {
+  border-bottom: none;
+}
+
+.post-options-popover button:hover {
+  background: var(--hover-bg-color);
+}
+
+.post-delete-btn {
+  color: #ed4956;           /* IG 紅 */
+  font-weight: 700;
+}
+
+.post-options-cancel {
+  color: var(--text-color);
 }

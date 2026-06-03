@@ -6,7 +6,7 @@ document.addEventListener("sidebarLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const profileId = urlParams.get("id");
 
-  const me =  await getCachedMe();
+  const me = await getCachedMe();
 
   if (!me || !me.data) {
     console.error("Failed to fetch current user (possibly rate limited).");
@@ -119,6 +119,7 @@ document.addEventListener("sidebarLoaded", async () => {
     const img = document.createElement("img");
     img.src = post.media[0].url;
     img.alt = post.user.username;
+    img.dataset.postId = post._id;
     img.addEventListener("click", () => {
       openCommentModal(post);
     });
@@ -182,6 +183,18 @@ document.addEventListener("sidebarLoaded", async () => {
   }
 
   document.addEventListener("postCreated", () => {
-    location.reload(); // 或重新載入該用戶貼文
+    location.reload();
+  });
+
+  document.addEventListener("postDeleted", (e) => {
+    const postId = e.detail.postId;
+    const cardToRemove = document.querySelector(`[data-post-id="${postId}"]`);
+    if (cardToRemove) {
+      cardToRemove.remove();
+    }
+    if (statCounts[0]) {
+      let currentCount = parseInt(statCounts[0].textContent) || 0;
+      statCounts[0].textContent = Math.max(0, currentCount - 1);
+    }
   });
 });
