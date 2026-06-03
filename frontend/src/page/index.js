@@ -106,7 +106,8 @@ const loadSuggestions = async (meInfo) => {
 };
 
 document.addEventListener("sidebarLoaded", async (e) => {
-  const { resetModal, getFormData, currentUser } = e.detail;
+  const { resetModal, getFormData } = e.detail;
+  currentUser = e.detail.currentUser;
   const shareBtn = document.getElementById("publish-btn");
 
   loadPosts();
