@@ -1,6 +1,7 @@
 const createPostCard = (post) => {
   const card = document.createElement("div");
   card.className = "post-card";
+  card.dataset.postId = post._id;
 
   card.innerHTML = `
     <div class="post-header">

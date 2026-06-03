@@ -118,3 +118,11 @@ document.addEventListener("postCreated", (e) => {
   hasMore = true;
   loadPosts(1);
 });
+
+document.addEventListener("postDeleted", (e) => {
+  const postId = e.detail.postId;
+  const cardToRemove = document.querySelector(`[data-post-id="${postId}"]`);
+  if (cardToRemove) {
+    cardToRemove.remove();
+  }
+});
