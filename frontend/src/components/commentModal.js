@@ -104,9 +104,8 @@ async function openCommentModal(post, onCommentAdded, onLikeChanged) {
     : false;
 
   const isOwner = currentUser
-  ? currentUser._id.toString() === post.user._id.toString()
-  : false;
-
+    ? currentUser._id.toString() === post.user._id.toString()
+    : false;
 
   let optionsBtn = modal.querySelector(".post-options-btn");
   const popover = modal.querySelector(".post-options-popover");
@@ -160,7 +159,6 @@ async function openCommentModal(post, onCommentAdded, onLikeChanged) {
         );
         popover.classList.add("hidden");
         modal.classList.add("hidden");
-
       } else {
         alert("刪除失敗，請稍後再試");
 
@@ -319,19 +317,15 @@ async function openCommentModal(post, onCommentAdded, onLikeChanged) {
 
     topBar.classList.remove("hidden");
     closeBtn.style.display = "none";
-    modalHeader.style.display = "none";
-    captionArea.style.display = "none";
     modalFooter.style.display = "none";
 
     const backBtn = modal.querySelector(".top-back");
     const newBackBtn = backBtn.cloneNode(true);
     backBtn.parentNode.replaceChild(newBackBtn, backBtn);
+
     newBackBtn.addEventListener("click", () => {
-      // 恢復桌面版狀態
       topBar.classList.add("hidden");
       closeBtn.style.display = "";
-      modalHeader.style.display = "";
-      captionArea.style.display = "";
       modalFooter.style.display = "";
       modal.classList.add("hidden");
     });

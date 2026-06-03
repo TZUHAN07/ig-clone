@@ -145,6 +145,9 @@ body {
   margin-right: 6px;
   font-weight: 600;
 }
+.caption {
+  white-space: pre-line;
+}
 
 .caption.truncated {
   display: -webkit-box;
