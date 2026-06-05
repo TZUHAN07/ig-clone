@@ -8,7 +8,7 @@
 
 ### 即時聊天 + Mobile RWD（一個 GIF 三個亮點）
 
-![chat demo](./assets/demo/chat-demo.gif)
+https://github.com/user-attachments/assets/86390812-6034-4f65-b9e1-4f8ab6fc3d43
 
 > Mobile viewport 雙視窗 demo，涵蓋 3 個技術點：
 > - **Socket.io 即時推送** — 一邊送 → 另一邊立刻收到，不用 refresh
@@ -17,7 +17,7 @@
 
 ### 發文流程
 
-![post demo](./assets/demo/post-create.gif)
+https://github.com/user-attachments/assets/a38f6e2f-2934-4af4-be25-1be57be56a77
 
 > 從點 + 開 modal → 選圖 → 寫 caption → Share → 首頁即時刷新：
 > - **AWS S3 圖片上傳** + Sharp 自動 resize
