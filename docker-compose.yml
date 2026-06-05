@@ -2,8 +2,6 @@ services:
   backend:
     image: tzuhan1007/ig-clone-backend:latest
     container_name: ig-backend
-    ports:
-      - "3000:3000"
     env_file:
       - ./backend/.env
     restart: unless-stopped
