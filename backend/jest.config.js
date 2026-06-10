@@ -5,8 +5,6 @@ module.exports = {
 
   testTimeout: 30000,
 
-  setupFilesAfterEach: ["./test/setup.js"],
-
   collectCoverageFrom: [
     "controllers/**/*.js",
     "middleware/**/*.js",
