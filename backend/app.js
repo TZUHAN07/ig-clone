@@ -11,6 +11,8 @@ const messageRoute = require("./routes/messageRoutes");
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
