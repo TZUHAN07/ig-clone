@@ -1,210 +1,168 @@
 # IG Clone
 
-> 全端 IG 仿作 — Socket.io 即時聊天 + S3 多圖上傳 + Docker 部署
+使用 Node.js、MongoDB、Socket.io、Docker 與 AWS 打造的 production-ready Instagram 全端仿作。
 
-🌐 **Live Demo**：[https://ig-clone.tzuhan.dev](https://ig-clone.tzuhan.dev)（AWS EC2 + Docker + nginx）
+專案涵蓋即時聊天、JWT 驗證、AWS S3 圖片上傳、Docker multi-platform deployment，以及 GitHub Actions CI/CD 自動部署流程。
 
-## Demo
+[![Test](https://github.com/TZUHAN07/ig-clone/actions/workflows/test.yml/badge.svg)](https://github.com/TZUHAN07/ig-clone/actions/workflows/test.yml)
+[![Deploy](https://github.com/TZUHAN07/ig-clone/actions/workflows/deploy.yml/badge.svg)](https://github.com/TZUHAN07/ig-clone/actions/workflows/deploy.yml)
 
-### 即時聊天 + Mobile RWD（一個 GIF 三個亮點）
+🌐 **Live Demo**：https://ig-clone.tzuhan.dev
+（AWS EC2 + Docker + Nginx + Cloudflare）
+
+---
+
+# Demo 與核心功能
+
+## 即時聊天系統
 
 https://github.com/user-attachments/assets/86390812-6034-4f65-b9e1-4f8ab6fc3d43
 
-> Mobile viewport 雙視窗 demo，涵蓋 3 個技術點：
-> - **Socket.io 即時推送** — 一邊送 → 另一邊立刻收到，不用 refresh
-> - **多裝置同步** — 同一帳號多裝置即時更新
-> - **Mobile RWD 切 view 模式** — list ↔ message-area 切換，用 state class pattern + CSS `:has()` 實作
+* 使用 Socket.io 建立即時聊天功能，支援 room-based event handling 與 acknowledgement callback。
+* 支援同帳號多裝置同步更新。
+* 透過 Nginx WebSocket reverse proxy 解決 Cloudflare Free Plan 無法代理非標準 port 的限制。
 
-### 發文流程
+## 圖片上傳與發文流程
 
 https://github.com/user-attachments/assets/a38f6e2f-2934-4af4-be25-1be57be56a77
 
-> 從點 + 開 modal → 選圖 → 寫 caption → Share → 首頁即時刷新：
-> - **AWS S3 圖片上傳** + Sharp 自動 resize
-> - **Mongoose 寫入 Post + populate user**
-> - **CustomEvent dispatch `postCreated` → 首頁 listener 即時刷新**（不用 refresh page）
+* 使用 AWS S3 建立圖片上傳流程，搭配 Multer 與 Sharp 進行圖片壓縮與 resize。
+* 使用 CustomEvent pattern 實作首頁動態更新，不需重新整理頁面。
+* 支援 Instagram carousel 形式的多圖貼文（1–10 張）。
 
-## Features
+---
 
-- **多圖貼文上傳** — schema 支援 1-10 張（前端 UI 多圖選擇 in progress）
-- **即時聊天室** — Socket.io + ack callback + 多裝置同步
-- **即時搜尋** — debounce + Mongoose regex
-- **追蹤 / 按讚 / 留言**
-- **JWT auth** + io.use socket 握手驗證
-- **響應式 RWD** — mobile chat 切 view 模式（state class + CSS :has()）
-- **AWS S3 圖片儲存** + Sharp 自動 resize
+# 技術亮點
 
-## Tech Stack
+* JWT authentication 搭配 Socket.io handshake middleware，實作即時連線驗證。
+* 使用 Docker Compose 與 `docker-compose.override.yml` 分離開發與 production 環境。
+* 使用 Docker Buildx 支援 Apple Silicon（ARM64）與 AWS EC2（AMD64）跨平台部署。
+* 使用 `IntersectionObserver` 與 pagination 實作 infinite scroll。
+* 設定 Express `trust proxy` 與 Nginx `X-Forwarded-For`，正確取得 client IP 並支援 rate limiting。
+* 處理 iOS Safari `100dvh` viewport 問題，優化 mobile 使用體驗。
 
-**Backend**
-- Node.js / Express
-- MongoDB / Mongoose
-- Socket.io（即時通訊）
-- JWT（auth）
-- Multer + Sharp（圖片處理）
-- AWS S3（圖片儲存）
+---
 
-**Frontend**
-- 純 JavaScript（無 framework）
-- HTML5 / CSS3 / CSS variable design system
-- 響應式 RWD（含 mobile 切 view）
+# Tech Stack
 
-**DevOps**
-- Docker / Docker Compose
-- nginx（靜態檔伺服）
-- nodemon（dev hot reload）
+## Backend
 
-## Database Schema
+* Node.js
+* Express.js
+* MongoDB（Mongoose）
+* Socket.io
+* JWT Authentication
+* Multer
+* Sharp
 
-```mermaid
+## Frontend
+
+* Vanilla JavaScript（ES6+）
+* HTML5
+* CSS3
+* RWD 響應式設計
+
+## Testing
+
+* Jest
+* Supertest
+* mongodb-memory-server
+
+## DevOps & Cloud
+
+* Docker
+* Docker Compose
+* Docker Buildx
+* GitHub Actions CI/CD
+* Nginx
+* AWS EC2 / S3
+* Cloudflare
+
+---
+
+# CI/CD Workflow
+
+部署流程會在 merge 到 `main` branch 後自動觸發：
+
+`Push → Test → Build Docker Images → Deploy to EC2`
+
+* GitHub Actions 自動執行 Jest 與 Supertest 測試。
+* 自動 build Docker image 並 push 至 Docker Hub。
+* 透過 SSH workflow 自動部署至 AWS EC2。
+* 使用 GitHub Secrets 管理敏感憑證與 SSH key。
+
+---
+
+# Testing
+
+```bash id="q0d2wo"
+cd backend
+
+npm test
+npm run test:coverage
+```
+
+目前測試涵蓋：
+
+* 自訂 error handling unit test
+* authentication API integration test
+* 使用 `mongodb-memory-server` 建立隔離的 in-memory MongoDB 測試環境
+
+---
+
+# Database Design
+
+```mermaid id="vyrm8o"
 erDiagram
     USER ||--o{ POST : creates
     USER ||--o{ COMMENT : writes
     POST ||--o{ COMMENT : has
-    USER ||--o{ MESSAGE : "sends/receives"
-    USER }o--o{ USER : "follows"
-    POST }o--o{ USER : "liked by"
-
-    USER {
-        ObjectId _id PK
-        string username UK "lowercase, trim"
-        string email UK "regex validated"
-        string password "select: false, toJSON 移除"
-        string avatar "default ui-avatars"
-        ObjectId_array followers FK
-        ObjectId_array following FK
-        timestamp createdAt
-        timestamp updatedAt
-    }
-
-    POST {
-        ObjectId _id PK
-        ObjectId user FK "ref User"
-        string content "required"
-        Object_array media "1-10 張 sub-doc {url, type}"
-        ObjectId_array likes FK "ref User"
-        ObjectId_array comments FK "ref Comment"
-        timestamp createdAt
-        timestamp updatedAt
-    }
-
-    COMMENT {
-        ObjectId _id PK
-        ObjectId user FK "ref User"
-        ObjectId post FK "ref Post"
-        string content "required"
-        timestamp createdAt
-        timestamp updatedAt
-    }
-
-    MESSAGE {
-        ObjectId _id PK
-        ObjectId sender FK "ref User"
-        ObjectId recipient FK "ref User"
-        string content "max 1000 字"
-        boolean read "default false"
-        timestamp createdAt
-        timestamp updatedAt
-    }
+    USER ||--o{ MESSAGE : sends
+    USER }o--o{ USER : follows
+    POST }o--o{ USER : liked_by
 ```
 
-### Schema 
+## Schema Design Considerations
 
-- **User 密碼雙層保護**：`select: false` + `toJSON transform` 雙保險（單一防線會在 `findOne().select('+password')` 時失守）
-- **Follower / Following 對稱欄位**：用 `ObjectId` array 雙向儲存，方便 `$lookup` 跨集合 join
-- **Post.media sub-schema**：embed 而非另開 collection，因為 media 不會被獨立查詢（一定跟 post 一起）
-- **Message 雙端 ref**：sender + recipient 都 ref User，方便 aggregation 用 `$cond` 取「對話的另一個人」
-- **Post indexes**：`{user: 1, createdAt: -1}` 跟 `{createdAt: -1}` 加速個人 feed 跟首頁 feed 查詢
+* 使用 embedded sub-document 儲存 media 資訊，降低 post query 成本。
+* 建立 compound index 優化 feed query 效能。
+* 保留 follower / like relationship 後續拆分 collection 的 scalability 遷移空間。
+* 文件化大型 follower relationship 的 migration path。
 
-## Scale Considerations
+---
 
-### Followers / Likes 用 Array Reference 是 MVP Trade-off
+# Engineering Notes
 
-目前 `User.followers` 跟 `Post.likes` 用 `ObjectId[]` 存在 document 內：
-- **MVP 階段 OK**：每 user 追蹤者 < 1k、每 post 按讚 < 100
-- **這是 MongoDB 反 pattern**：unbounded growing array in document
-- **撞牆點**：每 user 追蹤者 > 10k 後 update 效能急速下降；> 1M 撞 16MB document 上限
+額外的 deployment 與 architecture 筆記整理於 `/docs`：
 
-### Scaled 版本：拆 follows / likes collection
+* Docker deployment
+* Cloudflare 與 WebSocket proxy 問題
+* MongoDB schema scaling
+* GitHub Actions CI/CD 設定
 
-未來上線真實量級（例如網紅有百萬追蹤者）會拆獨立 collection：
+---
 
-```js
-// follows collection
-{
-  follower: ObjectId,   // 誰追蹤
-  following: ObjectId,  // 追蹤誰
-  createdAt: Date
-}
+# Roadmap
 
-// indexes:
-{ follower: 1, following: 1 } unique   // 防重複追蹤
-{ follower: 1, createdAt: -1 }         // 看我追蹤誰
-{ following: 1, createdAt: -1 }        // 看我的追蹤者
-```
+## In Progress
 
-**好處**：
-- 無上限（千萬筆都行）
-- Update 效能好（單一 insert/delete vs 整個 user document 重寫）
-- 可加 metadata（`close_friend` / `mute_post` / `mute_story` 等）
+* apiFetch wrapper refactor
+* Read receipt / typing indicator
+* Integration test coverage 擴充
+* Cursor-based pagination
 
-**遷移成本**：
-- 查詢要 `$lookup` join
-- 「user 是否追蹤 X」要額外 query follows collection
+## Planned
 
+* Redis caching
+* Structured logging
+* TypeScript migration
+* Stories / Reels 功能
 
-## Quick Start
+---
 
-需求：Docker Desktop + Docker Compose
+# Author
 
-```bash
-# 1. clone repo
-git clone https://github.com/TZUHAN07/ig-clone.git
-cd ig-clone
+**趙紫涵（Tzu Han Chao / Joanne）**
 
-# 2. 設定環境變數
-cp backend/.env.example backend/.env
-# 編輯 backend/.env，填入：
-#   MONGO_URI=mongodb://...
-#   JWT_SECRET=your-secret
-#   AWS_ACCESS_KEY_ID=...
-#   AWS_SECRET_ACCESS_KEY=...
-#   AWS_BUCKET_NAME=...
-
-# 3. 啟動所有服務（backend + frontend + mongo）
-docker compose up --build -d
-
-# 4. 開瀏覽器
-open http://localhost
-```
-
-服務 port：
-- Frontend: `localhost:80`（nginx serve）
-- Backend: `localhost:3000`
-- MongoDB: container 內部，host 不對外開
-
-## Roadmap
-
-### 短期（in progress）
-- [ ] Frontend 多圖選擇 UI + carousel 預覽（backend schema 已準備）
-- [ ] Read receipt / typing indicator（chat 階段 3）
-- [ ] Domain + SSL（Let's Encrypt）
-
-### 中期
-- [ ] **Schema scale refactor**：`User.followers` / `Post.likes` 從 array 拆獨立 collection（避免 16MB document 上限 + update 效能問題）
-- [ ] Cursor-based pagination（取代 skip/limit，避免大資料量效能下降）
-- [ ] TypeScript migration（API contract、避免再踩 schema mismatch）
-- [ ] CI/CD pipeline（GitHub Actions 自動測試 + 部署）
-- [ ] Unit test 補完（Jest，目前 frontend 純函式有手動驗證）
-- [ ] Search 加 hashtag
-
-### 長期
-- [ ] Stories（IG 限時動態）
-- [ ] Reels（短影音）
-
-## Author
-
-**Tzu Han Chao**
-
-- Email: joannechao1007@gmail.com
-- GitHub: [@TZUHAN07](https://github.com/TZUHAN07)
+* GitHub：https://github.com/TZUHAN07
+* Email：[joannechao1007@gmail.com](mailto:joannechao1007@gmail.com)
