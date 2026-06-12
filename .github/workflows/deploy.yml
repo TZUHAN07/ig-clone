@@ -25,7 +25,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: tzuhan1007/ig-clone-backend:latest
 
@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: tzuhan1007/ig-clone-frontend:latest
 
