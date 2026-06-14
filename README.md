@@ -12,6 +12,23 @@
 
 ---
 
+# 專案定位
+
+本專案為 portfolio 用途的 production-style 全端模擬實作。
+在受控的 MVP 規模環境下，展示 system design、DevOps、與 backend engineering 的工程能力與設計思考。
+
+---
+
+# 系統範圍與限制
+
+* 設計目標：MVP / 早期使用規模（early-scale usage）
+* 部署架構：單一 region（AWS EC2 t2.micro）
+* 預期 DAU：< 10,000
+* 對社交互動接受 eventual consistency（follower count、like count 容許短暫延遲）
+* 未涵蓋：multi-region replication、auto-scaling、disaster recovery
+
+---
+
 # Demo 與核心功能
 
 ## 即時聊天系統
@@ -20,7 +37,6 @@ https://github.com/user-attachments/assets/86390812-6034-4f65-b9e1-4f8ab6fc3d43
 
 * 使用 Socket.io 建立即時聊天功能，支援 room-based event handling 與 acknowledgement callback。
 * 支援同帳號多裝置同步更新。
-* 透過 Nginx WebSocket reverse proxy 解決 Cloudflare Free Plan 無法代理非標準 port 的限制。
 
 ## 圖片上傳與發文流程
 
@@ -38,8 +54,6 @@ https://github.com/user-attachments/assets/a38f6e2f-2934-4af4-be25-1be57be56a77
 * 使用 Docker Compose 與 `docker-compose.override.yml` 分離開發與 production 環境。
 * 使用 Docker Buildx 支援 Apple Silicon（ARM64）與 AWS EC2（AMD64）跨平台部署。
 * 使用 `IntersectionObserver` 與 pagination 實作 infinite scroll。
-* 設定 Express `trust proxy` 與 Nginx `X-Forwarded-For`，正確取得 client IP 並支援 rate limiting。
-* 處理 iOS Safari `100dvh` viewport 問題，優化 mobile 使用體驗。
 
 ---
 
@@ -112,7 +126,7 @@ npm run test:coverage
 
 # Database Design
 
-```mermaid id="vyrm8o"
+```mermaid 
 erDiagram
     USER ||--o{ POST : creates
     USER ||--o{ COMMENT : writes
@@ -129,6 +143,8 @@ erDiagram
 * 保留 follower / like relationship 後續拆分 collection 的 scalability 遷移空間。
 * 文件化大型 follower relationship 的 migration path。
 
+> 完整 ERD、Schema 設計理由、與 Scale Considerations 詳見 [docs/architecture.md](docs/architecture.md)。
+
 ---
 
 # Engineering Notes
@@ -139,6 +155,18 @@ erDiagram
 * Cloudflare 與 WebSocket proxy 問題
 * MongoDB schema scaling
 * GitHub Actions CI/CD 設定
+
+---
+
+# Known Limitations
+
+目前部分功能仍為 MVP 階段實作：
+
+* Backend 已支援 1–10 張 carousel media schema，但 frontend UI 目前仍以單張圖片 rendering 為主
+* JWT token expiration handling 尚未完整實作 automatic re-authentication / redirect flow
+* feed pagination 目前使用 skip/limit，尚未切換 cursor-based pagination
+
+上述項目預計於後續版本持續重構與完善。
 
 ---
 
