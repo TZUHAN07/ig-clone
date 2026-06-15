@@ -89,12 +89,21 @@ async function openCommentModal(post, onCommentAdded, onLikeChanged) {
   const username = document.querySelector(".comment-modal-username");
   const caption = document.querySelector(".comment-modal-caption");
   const commentList = document.querySelector(".comment-list");
-  const modalLike = modal.querySelector(".modal-post-like");
-  const modalComment = modal.querySelector(".modal-post-comment");
   const likesCount = modal.querySelector(".modal-post-likes-count");
   const commentsCount = modal.querySelector(".modal-post-comments-count");
   const postTime = modal.querySelector(".modal-post-time");
-  const commentInput = document.getElementById("comment-input");
+
+  const oldModalLike = modal.querySelector(".modal-post-like");
+  const modalLike = oldModalLike.cloneNode(true);
+  oldModalLike.parentNode.replaceChild(modalLike, oldModalLike);
+
+  const oldModalComment = modal.querySelector(".modal-post-comment");
+  const modalComment = oldModalComment.cloneNode(true);
+  oldModalComment.parentNode.replaceChild(modalComment, oldModalComment);
+
+  const oldInput = document.getElementById("comment-input");
+  const commentInput = oldInput.cloneNode(true);
+  oldInput.parentNode.replaceChild(commentInput, oldInput);
 
   likesCount.textContent = `${post.likes.length} likes`;
   postTime.textContent = formatTime(post.createdAt);
@@ -301,7 +310,7 @@ async function openCommentModal(post, onCommentAdded, onLikeChanged) {
   });
 
   commentInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
       e.preventDefault();
       if (!newBtn.disabled) newBtn.click();
     }
