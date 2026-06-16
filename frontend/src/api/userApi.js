@@ -1,95 +1,27 @@
 async function getUser(userId) {
-  const token = getToken();
-  try {
-    const res = await fetch(`${API_BASE_URL}/users/${userId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("取得用戶失敗", err.message);
-    return null;
-  }
+  return await apiFetch(`${API_BASE_URL}/users/${userId}`);
 }
 
 // 取得所有用戶
 async function getAllUsers() {
-  const token = getToken();
-
-  try {
-    const res = await fetch(`${API_BASE_URL}/users`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("取得所有用戶失敗", err.message);
-    return null;
-  }
+  return await apiFetch(`${API_BASE_URL}/users`);
 }
 
 // 追蹤用戶
 async function followUser(targetId) {
-  const token = getToken();
-  try {
-    const res = await fetch(`${API_BASE_URL}/users/${targetId}/follow`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("追蹤用戶失敗", err.message);
-    return null;
-  }
+  return await apiFetch(`${API_BASE_URL}/users/${targetId}/follow`, {
+    method: "POST",
+  });
 }
 
 async function unfollowUser(targetId) {
-  const token = getToken();
-  try {
-    const res = await fetch(`${API_BASE_URL}/users/${targetId}/follow`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("取消追蹤用戶失敗", err.message);
-    return null;
-  }
+  return await apiFetch(`${API_BASE_URL}/users/${targetId}/follow`, {
+    method: "DELETE",
+  });
 }
 
 async function searchUsers(query) {
-  const token = getToken();
-  try {
-    const res = await fetch(
-      `${API_BASE_URL}/users/search?query=${encodeURIComponent(query)}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("搜尋用戶失敗", err.message);
-    return null;
-  }
+  return await apiFetch(
+    `${API_BASE_URL}/users/search?query=${encodeURIComponent(query)}`,
+  );
 }
