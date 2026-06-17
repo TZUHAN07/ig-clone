@@ -5,6 +5,7 @@ const passwordInput = document.getElementById("password");
 const repeatPasswordInput = document.getElementById("repeat-password");
 const errorMessage = document.getElementById("error-message");
 const submitButton = document.getElementById("submit-button");
+const demoBtn = document.getElementById("demo-login-btn");
 
 redirectIfLoggedIn();
 
@@ -116,3 +117,15 @@ document.querySelectorAll(".toggle-password").forEach((btn) => {
     wrapper.classList.toggle("password-visible", isHidden);
   });
 });
+
+
+if (demoBtn) {
+  demoBtn.addEventListener("click", () => {
+    emailInput.value = "demo@tzuhan.dev";
+    passwordInput.value = "Demo1234";
+
+    form.dispatchEvent(
+      new Event("submit", { bubbles: true, cancelable: true })
+    );
+  });
+}

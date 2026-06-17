@@ -26,7 +26,7 @@ h1 {
 form {
   width: min(400px, 100%);
   margin-top: 20px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -186,4 +186,37 @@ form div.incorrect input {
 }
 .password-wrapper.password-visible .eye-closed {
   display: none;
+}
+
+.demo-btn {
+  margin-top: 10px;
+  border: 2px solid var(--accent-color);
+  border-radius: 1000px;
+  padding: 0.85em 4em;
+  background-color: var(--base-color);
+  color: var(--accent-color);
+  font: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 150ms ease;
+}
+
+.demo-btn:hover {
+  background-color: var(--accent-color);
+  color: var(--base-color);
+}
+
+.demo-btn:focus {
+  outline: none;
+  background-color: var(--accent-color);
+  color: var(--base-color);
+}
+
+.demo-hint {
+  text-align: center;
+  margin: 0.5rem 0 2.5rem; /* 底部 2.5rem 拉開跟 signup 距離 */
+  color: var(--secondary-text-color);
+  font-size: 0.8rem;
 }
