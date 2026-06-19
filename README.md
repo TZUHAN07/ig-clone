@@ -1,4 +1,6 @@
-# IG Clone
+# IG Clone — Production-style Full-Stack Social Platform (MVP-scale)
+
+[English](./README.en.md) | **繁體中文**
 
 使用 Node.js、MongoDB、Socket.io、Docker 與 AWS 打造的 production-ready Instagram 全端仿作。
 
@@ -190,7 +192,7 @@ erDiagram
 
 # Author
 
-**趙紫涵（Tzu Han Chao / Joanne）**
+**Tzu Han Chao**
 
 * GitHub：https://github.com/TZUHAN07
 * Email：[joannechao1007@gmail.com](mailto:joannechao1007@gmail.com)
