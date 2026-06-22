@@ -53,7 +53,11 @@ jobs:
 
             git pull origin main
 
+            echo "Pruning old images before pull..."
+            docker image prune -a -f --filter "until=24h" || true
+
             docker compose pull
+
             docker compose up -d --force-recreate --remove-orphans
             docker compose ps
 
@@ -64,4 +68,4 @@ jobs:
               && echo "✅ deploy OK" \
               || (echo "❌ healthcheck failed" && exit 1)
 
-            docker image prune -a -f --filter "until=24h"
+            docker image prune -a -f --filter "until=24h" || true
