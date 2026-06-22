@@ -133,14 +133,16 @@ const deletePosts = asyncHandler(async (req, res) => {
   });
 });
 
+// Explore 頁 - 預設 18 (對齊 IG 3 columns × 6 rows 首屏 grid)
 const getAllPosts = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const page = Math.max(1, parseInt(req.query.page) || 1);
-  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 5));
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 18));
   const skip = (page - 1) * limit;
 
   const me = await User.findById(userId).select("following");
   const query = { user: { $nin: [...me.following, userId] } };
+
 
   const totalCount = await Post.countDocuments(query);
 
@@ -210,7 +212,7 @@ const getFollowingPosts = asyncHandler(async (req, res) => {
 const getUserPosts = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const page = Math.max(1, parseInt(req.query.page) || 1);
-  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 5));
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 12));
   const skip = (page - 1) * limit;
 
   const query = { user: id };
