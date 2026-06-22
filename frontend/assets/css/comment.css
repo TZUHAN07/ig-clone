@@ -43,17 +43,19 @@
 
 .comment-image-area {
   flex: 1;
-  background: #000;
+  background: var(--base-color);  
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 0;
+  aspect-ratio: 4 / 5;             
+  max-height: 90vh;
 }
 
 .comment-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;               
 }
 
 .comment-content-area {
@@ -192,7 +194,7 @@
   padding: 0 16px;
   letter-spacing: 0.2px;
 }
-/* 輸入區 */
+
 .comment-input-area {
   display: flex;
   align-items: center;
@@ -350,7 +352,7 @@
   font-size: 24px;
   line-height: 1;
   padding: 4px 8px;
-  margin-left: auto;        /* push 到 header 右側 */
+  margin-left: auto;       
   color: var(--text-color);
 }
 
@@ -391,7 +393,7 @@
 }
 
 .post-delete-btn {
-  color: #ed4956;           /* IG 紅 */
+  color: #ed4956;           
   font-weight: 700;
 }
 
