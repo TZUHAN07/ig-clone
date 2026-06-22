@@ -4,6 +4,10 @@ const SOCKET_URL = window.location.origin;
 
 const socket = io(SOCKET_URL, {
   auth: { token: getToken() },
+  transports: ["websocket"],
+  reconnection: true,
+  reconnectionAttempts: 10,
+  reconnectionDelay: 1000,
 });
 
 socket.on("connect", () => {
@@ -50,7 +54,7 @@ const appendMessage = (msg) => {
   const messages = messageListEl.querySelectorAll(".message");
   const lastMsg = messages[messages.length - 1];
   const newDate = new Date(msg.createdAt).toDateString();
-  
+
   if (!lastMsg || newDate !== lastMsg.dataset.date) {
     messageListEl.appendChild(createDateDivider(msg.createdAt));
   }
@@ -221,7 +225,6 @@ document.addEventListener("sidebarLoaded", async (e) => {
   await loadConversations();
   await openChatFromUrl();
 });
-
 
 mobileBackBtnEl.addEventListener("click", () => {
   chatContainerEl.classList.remove("show-message");
