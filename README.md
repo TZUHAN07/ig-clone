@@ -12,6 +12,26 @@
 🌐 **Live Demo**：https://ig-clone.tzuhan.dev
 （AWS EC2 + Docker + Nginx + Cloudflare）
 
+### 🎯 快速體驗（免註冊）
+
+可於登入頁點擊 **Try Demo** 快速登入預設測試帳號，體驗已建立好的貼文與聊天資料。
+
+#### 測試即時聊天（多裝置同步）
+
+若要測試 Socket.io 即時同步功能，可同時開啟兩個瀏覽器視窗：
+
+- **視窗 1**：點擊 **Try Demo** → 自動登入 `demo`
+- **視窗 2**（建議使用無痕模式）：
+  - Email：`demo2@tzuhan.dev`
+  - Password：`Demo2234`
+
+可互傳訊息測試：
+
+- 即時同步
+- Room-based event handling
+- JWT handshake authentication
+- Multi-device sync
+
 ---
 
 # 專案定位
