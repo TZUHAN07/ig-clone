@@ -48,8 +48,6 @@
   align-items: center;
   justify-content: center;
   min-width: 0;
-  aspect-ratio: 4 / 5;             
-  max-height: 90vh;
 }
 
 .comment-image {
