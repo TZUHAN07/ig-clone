@@ -1,6 +1,6 @@
 requireAuth();
 
-const SOCKET_URL = window.location.origin;
+const SOCKET_URL = config.API_BASE_URL;
 
 const socket = io(SOCKET_URL, {
   auth: { token: getToken() },
