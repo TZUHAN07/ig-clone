@@ -15,7 +15,6 @@ const s3 = new S3Client({
   },
 });
 
-
 const uploadToS3 = async (file, folderName) => {
   const fileName = `${folderName}/${Date.now()}_${file.originalname}`;
 
@@ -28,16 +27,17 @@ const uploadToS3 = async (file, folderName) => {
 
   await s3.send(new PutObjectCommand(params));
 
-  return `${process.env.R2_PUBLIC_URL}/${fileName}`;
+  const baseUrl = (process.env.R2_PUBLIC_URL || "").replace(/\/$/, "");
+  return `${baseUrl}/${fileName}`;
 };
 
 const deleteImageFromS3 = async (fileUrl) => {
   if (!fileUrl) return;
 
-  const url = new URL(fileUrl);
-  const key = url.pathname.substring(1);
-
   try {
+    const url = new URL(fileUrl);
+    const key = url.pathname.substring(1);
+
     const params = {
       Bucket: process.env.R2_BUCKET_NAME,
       Key: key,
