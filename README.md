@@ -2,15 +2,15 @@
 
 [English](./README.en.md) | **繁體中文**
 
-使用 Node.js、MongoDB、Socket.io、Docker 與 AWS 打造的 production-ready Instagram 全端仿作。
+使用 Node.js、MongoDB、Socket.io 與 Docker 打造的 production-ready Instagram 全端仿作。
 
-專案涵蓋即時聊天、JWT 驗證、AWS S3 圖片上傳、Docker multi-platform deployment，以及 GitHub Actions CI/CD 自動部署流程。
+專案涵蓋即時聊天、JWT 驗證、Cloudflare R2 圖片上傳，以及 GitHub Actions CI/CD 自動部署流程。
 
 [![Test](https://github.com/TZUHAN07/ig-clone/actions/workflows/test.yml/badge.svg)](https://github.com/TZUHAN07/ig-clone/actions/workflows/test.yml)
-[![Deploy](https://github.com/TZUHAN07/ig-clone/actions/workflows/deploy.yml/badge.svg)](https://github.com/TZUHAN07/ig-clone/actions/workflows/deploy.yml)
+
 
 🌐 **Live Demo**：https://ig-clone.tzuhan.dev
-（AWS EC2 + Docker + Nginx + Cloudflare）
+（Render + Cloudflare Pages）
 
 ### 🎯 快速體驗（免註冊）
 
@@ -44,7 +44,7 @@
 # 系統範圍與限制
 
 * 設計目標：MVP / 早期使用規模（early-scale usage）
-* 部署架構：單一 region（AWS EC2 t2.micro）
+* 部署架構：單一 region（Render 免費方案 + Cloudflare Pages）
 * 預期 DAU：< 10,000
 * 對社交互動接受 eventual consistency（follower count、like count 容許短暫延遲）
 * 未涵蓋：multi-region replication、auto-scaling、disaster recovery
@@ -64,7 +64,7 @@ https://github.com/user-attachments/assets/86390812-6034-4f65-b9e1-4f8ab6fc3d43
 
 https://github.com/user-attachments/assets/a38f6e2f-2934-4af4-be25-1be57be56a77
 
-* 使用 AWS S3 建立圖片上傳流程，搭配 Multer 與 Sharp 進行圖片壓縮與 resize。
+* 使用 Cloudflare R2 建立圖片上傳流程，搭配 Multer 與 Sharp 進行圖片壓縮與 resize。
 * 使用 CustomEvent pattern 實作首頁動態更新，不需重新整理頁面。
 * 支援 Instagram carousel 形式的多圖貼文（1–10 張）。
 
@@ -73,8 +73,6 @@ https://github.com/user-attachments/assets/a38f6e2f-2934-4af4-be25-1be57be56a77
 # 技術亮點
 
 * JWT authentication 搭配 Socket.io handshake middleware，實作即時連線驗證。
-* 使用 Docker Compose 與 `docker-compose.override.yml` 分離開發與 production 環境。
-* 使用 Docker Buildx 支援 Apple Silicon（ARM64）與 AWS EC2（AMD64）跨平台部署。
 * 使用 `IntersectionObserver` 與 pagination 實作 infinite scroll。
 
 ---
@@ -110,9 +108,9 @@ https://github.com/user-attachments/assets/a38f6e2f-2934-4af4-be25-1be57be56a77
 * Docker Compose
 * Docker Buildx
 * GitHub Actions CI/CD
-* Nginx
-* AWS EC2 / S3
-* Cloudflare
+* Render（Backend hosting）
+* Cloudflare Pages（Frontend hosting）
+* Cloudflare R2（圖片儲存）
 
 ---
 
@@ -120,12 +118,12 @@ https://github.com/user-attachments/assets/a38f6e2f-2934-4af4-be25-1be57be56a77
 
 部署流程會在 merge 到 `main` branch 後自動觸發：
 
-`Push → Test → Build Docker Images → Deploy to EC2`
+`Push → GitHub Actions 執行測試 → Render / Cloudflare Pages 自動偵測並部署`
 
 * GitHub Actions 自動執行 Jest 與 Supertest 測試。
-* 自動 build Docker image 並 push 至 Docker Hub。
-* 透過 SSH workflow 自動部署至 AWS EC2。
-* 使用 GitHub Secrets 管理敏感憑證與 SSH key。
+* Backend 透過 Render 的 GitHub 整合，偵測到 main 分支有新 commit 後自動重新部署。
+* Frontend 透過 Cloudflare Pages 的 GitHub 整合，偵測到新 commit 後自動建置並部署。
+* 敏感憑證透過 Render / Cloudflare 後台的環境變數管理。
 
 ---
 
